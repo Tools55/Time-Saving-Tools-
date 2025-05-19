@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator - Time Saving Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #333;
+            color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .tool-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: #444;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.55);
+            flex-grow: 1;
+        }
+
+        .tool-header {
+            background: #222; color: #fff; padding: 1rem 0;
+            border-bottom: 3px solid #FFD700; text-align: center; margin-bottom: 25px;
+        }
+        .tool-header h1 a { color: #FFD700; text-decoration: none; font-size: 1.8em; }
+        .tool-header .breadcrumb { margin-top: 5px; font-size: 0.9em; }
+        .tool-header .breadcrumb a { color: #ccc; text-decoration: none; }
+        .tool-header .breadcrumb a:hover { color: #FFD700; }
+
+        .tool-container h2 { color: #FFD700; text-align: center; margin-bottom: 2rem; font-size: 2em; }
+
+        .form-group { margin-bottom: 1.8rem; }
+        .form-group label { display: block; margin-bottom: 0.6rem; color: #f0f0f0; font-weight: bold; font-size: 1.05em; }
+
+        input[type="text"]#userApiKey, /* Style for API Key input */
+        textarea#prompt, 
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #555;
+            background-color: #3a3a3a;
+            color: #f4f4f4;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        input[type="text"]#userApiKey {
+             font-family: 'Courier New', Courier, monospace; /* Monospace for API keys */
+        }
+        textarea#prompt { min-height: 100px; resize: vertical; }
+        select { height: 48px; }
+
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .api-key-instructions { /* Renamed from api-key-info */
+            background-color: #383838;
+            color: #ddd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9em;
+            border-left: 4px solid #FFD700; /* Yellow accent on left */
+        }
+        .api-key-instructions strong { color: #FFD700; }
+        .api-key-instructions a { color: #FFFACD; text-decoration: underline; }
+        .api-key-instructions a:hover { color: #FFD700; }
+        .api-key-instructions .important-note {
+            color: #FFB74D; /* Orange for important note */
+            font-weight: bold;
+        }
+
+
+        /* Buttons are already large */
+        button {
+            background-color: #FFD700; color: #333; border: none;
+            padding: 1rem 2rem; font-size: 1.15em; font-weight: bold;
+            border-radius: 6px; cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-flex; align-items: center; gap: 10px;
+            margin: 8px; min-width: 220px; justify-content: center;
+        }
+        button:hover { background-color: #e6b800; transform: translateY(-3px) scale(1.02); }
+        button:disabled { background-color: #555; color: #888; cursor: not-allowed; transform: none; }
+        button .fas { font-size: 1.2em; }
+
+        #loadingIndicator { display: none; text-align: center; margin: 20px 0; font-size: 1.1em; color: #FFD700; }
+        #loadingIndicator .fas { margin-right: 10px; animation: fa-spin 2s infinite linear; }
+        @keyframes fa-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .image-results-container { margin-top: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+        .generated-image-wrapper { background-color: #3a3a3a; padding: 10px; border-radius: 6px; border: 1px solid #555; text-align: center; }
+        .generated-image-wrapper img { max-width: 100%; height: auto; border-radius: 4px; display: block; margin-bottom: 8px; background-color: #2c2c2c;}
+        .generated-image-wrapper a.download-link { color: #FFD700; text-decoration: none; font-size: 0.9em; display: inline-block; margin-top: 5px; padding: 5px 10px; background-color: #555; border-radius: 4px; }
+        .generated-image-wrapper a.download-link:hover { background-color: #FFD700; color: #333; }
+
+        .status-message { text-align: center; margin-top: 1.5rem; padding: 14px; border-radius: 5px; font-weight: bold; font-size: 1.05em;}
+        .status-message.error { background-color: #D32F2F; color: white; }
+        .status-message.info { background-color: #1976D2; color: white; }
+        
+        .tool-footer { background: #222; color: #ccc; text-align: center; padding: 1rem 0; font-size: 0.9em; border-top: 2px solid #FFD700; margin-top: auto;}
+        .tool-footer a { color: #FFD700; text-decoration: none; }
+        .tool-footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <header class="tool-header">
+        <h1><a href="../index.html">Time Saving Tools</a></h1>
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a> > <a href="../index.html#ai-tools-section">AI Tools</a> > <span>AI इमेज जेनरेटर</span>
+        </div>
+    </header>
+
+    <div class="tool-container">
+        <h2><i class="fas fa-lightbulb"></i> AI इमेज जेनरेटर (टेक्स्ट से इमेज)</h2>
+
+        <div class="api-key-instructions">
+            <p>यह टूल OpenAI DALL-E API का उपयोग करके इमेज जेनरेट करता है। इसका उपयोग करने के लिए, आपको अपनी **OpenAI API कुंजी** नीचे दिए गए फ़ील्ड में डालनी होगी।</p>
+            <p>यदि आपके पास API कुंजी नहीं है, तो आप <a href="https://platform.openai.com/signup/" target="_blank">OpenAI पर साइन अप करके</a> और फिर <a href="https://platform.openai.com/account/api-keys" target="_blank">अपनी API कुंजियाँ प्राप्त करके</a> एक बना सकते हैं।</p>
+            <p class="important-note"><i class="fas fa-exclamation-triangle"></i> कृपया ध्यान दें: OpenAI API के उपयोग पर शुल्क लग सकता है जो आपके अकाउंट से कटेगा। आपकी API कुंजी आपके ब्राउज़र में ही रहती है और हमारे सर्वर पर संग्रहीत नहीं होती है।</p>
+        </div>
+
+        <div class="form-group">
+            <label for="userApiKey"><i class="fas fa-key"></i> अपनी OpenAI API कुंजी डालें:</label>
+            <input type="text" id="userApiKey" placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+        </div>
+
+        <div class="form-group">
+            <label for="prompt"><i class="fas fa-comment-dots"></i> आप क्या बनाना चाहते हैं? (अपना प्रॉम्प्ट लिखें):</label>
+            <textarea id="prompt" placeholder="जैसे: A hyperrealistic portrait of a wise old wizard with a glowing staff"></textarea>
+        </div>
+        
+        <div class="options-grid">
+            <div class="form-group">
+                <label for="imageSize"><i class="fas fa-expand-arrows-alt"></i> इमेज का साइज़:</label>
+                <select id="imageSize">
+                    <option value="256x256">256x256 (DALL-E 2)</option>
+                    <option value="512x512">512x512 (DALL-E 2)</option>
+                    <option value="1024x1024" selected>1024x1024 (DALL-E 2 & 3)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="numImages"><i class="fas fa-images"></i> कितनी इमेज बनानी हैं?:</label>
+                <select id="numImages">
+                    <option value="1" selected>1</option>
+                </select>
+            </div>
+             <div class="form-group">
+                <label for="modelSelect"><i class="fas fa-brain"></i> AI मॉडल (DALL-E):</label>
+                <select id="modelSelect">
+                    <option value="dall-e-2">DALL-E 2 (तेज़, कम लागत)</option>
+                    <option value="dall-e-3" selected>DALL-E 3 (उच्च गुणवत्ता, अधिक लागत)</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <button id="generateBtn"><i class="fas fa-magic"></i> इमेज जेनरेट करें</button>
+        </div>
+
+        <div id="loadingIndicator">
+            <i class="fas fa-spinner"></i> इमेज बन रही है, कृपया प्रतीक्षा करें...
+        </div>
+        
+        <div id="statusMessage" class="status-message" style="display: none;"></div>
+
+        <div id="imageResultsContainer" class="image-results-container">
+            <!-- Generated images will be displayed here -->
+        </div>
+    </div>
+
+    <footer class="tool-footer">
+        <p>© <span id="currentYearFooter"></span> <a href="../index.html">Time Saving Tools</a>. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        const userApiKeyInput = document.getElementById('userApiKey'); // Input field for user's API key
+        const promptInput = document.getElementById('prompt');
+        const imageSizeSelect = document.getElementById('imageSize');
+        const numImagesSelect = document.getElementById('numImages');
+        const modelSelect = document.getElementById('modelSelect');
+        const generateBtn = document.getElementById('generateBtn');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const imageResultsContainer = document.getElementById('imageResultsContainer');
+        const statusMessageDiv = document.getElementById('statusMessage');
+
+        const openaiApiUrl = "https://api.openai.com/v1/images/generations";
+
+        // Attempt to load API key from localStorage
+        if (localStorage.getItem('userOpenAiApiKey')) {
+            userApiKeyInput.value = localStorage.getItem('userOpenAiApiKey');
+        }
+        // Save API key to localStorage when it changes
+        userApiKeyInput.addEventListener('change', () => {
+            localStorage.setItem('userOpenAiApiKey', userApiKeyInput.value.trim());
+        });
+
+
+        generateBtn.addEventListener('click', async () => {
+            const userApiKey = userApiKeyInput.value.trim(); // Get API key from user input
+            const prompt = promptInput.value.trim();
+            const size = imageSizeSelect.value;
+            const n = parseInt(numImagesSelect.value);
+            const model = modelSelect.value;
+
+            if (!userApiKey) {
+                showStatus("कृपया अपनी OpenAI API कुंजी डालें।", "error");
+                userApiKeyInput.focus();
+                return;
+            }
+             if (!prompt) {
+                showStatus("कृपया प्रॉम्प्ट लिखें कि आप कैसी इमेज बनाना चाहते हैं।", "error");
+                promptInput.focus();
+                return;
+            }
+
+
+            loadingIndicator.style.display = 'block';
+            generateBtn.disabled = true;
+            imageResultsContainer.innerHTML = '';
+            statusMessageDiv.style.display = 'none';
+
+            try {
+                const requestBody = {
+                    model: model,
+                    prompt: prompt,
+                    n: n,       
+                    size: size, 
+                    response_format: "url"
+                };
+                
+                if (n > 1 && model === "dall-e-3"){
+                     showStatus("DALL-E 3 एक बार में केवल 1 इमेज बनाता है। यदि आप DALL-E 3 का उपयोग कर रहे हैं, तो कृपया 'कितनी इमेज बनानी हैं?' को 1 पर सेट करें।", "error");
+                     throw new Error("DALL-E 3 requires n=1.");
+                }
+
+                const response = await fetch(openaiApiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${userApiKey}` // Use user-provided API key
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('API Error:', errorData);
+                    let errorMessage = `त्रुटि (${response.status}): ${errorData.error?.message || response.statusText}`;
+                    if (response.status === 401) {
+                        errorMessage += " कृपया जांचें कि आपकी API कुंजी सही है और आपके OpenAI अकाउंट में पर्याप्त क्रेडिट/सेटअप है।";
+                    } else if (response.status === 429) {
+                         errorMessage += " आप API रेट लिमिट पार कर चुके हैं। कृपया थोड़ी देर बाद प्रयास करें।";
+                    }
+                    showStatus(errorMessage, "error");
+                    throw new Error(errorMessage);
+                }
+
+                const data = await response.json();
+                displayImages(data.data, prompt);
+
+            } catch (error) {
+                console.error('इमेज जेनरेट करने में त्रुटि:', error);
+                if (!statusMessageDiv.textContent || statusMessageDiv.style.display === 'none') {
+                    showStatus(`इमेज जेनरेट करने में कुछ गड़बड़ हुई: ${error.message}`, "error");
+                }
+            } finally {
+                loadingIndicator.style.display = 'none';
+                generateBtn.disabled = false;
+            }
+        });
+
+        function displayImages(images, promptText) {
+            if (!images || images.length === 0) {
+                showStatus("API से कोई इमेज प्राप्त नहीं हुई।", "info");
+                return;
+            }
+            images.forEach((imageObj, index) => {
+                const imageUrl = imageObj.url;
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'generated-image-wrapper';
+
+                const imgElement = document.createElement('img');
+                imgElement.src = imageUrl;
+                imgElement.alt = `AI द्वारा बनाई गई इमेज ${index + 1} - प्रॉम्प्ट: ${promptText.substring(0,50)}...`;
+                
+                const downloadLink = document.createElement('a');
+                downloadLink.href = imageUrl;
+                downloadLink.textContent = `इमेज देखें/सहेजें ${index + 1}`;
+                downloadLink.target = "_blank";
+                downloadLink.className = 'download-link';
+
+                wrapper.appendChild(imgElement);
+                wrapper.appendChild(downloadLink);
+                imageResultsContainer.appendChild(wrapper);
+            });
+            showStatus(`सफलतापूर्वक ${images.length} इमेज जेनरेट हुईं!`, "info");
+        }
+        
+        function showStatus(message, type = "info") {
+            statusMessageDiv.textContent = message;
+            statusMessageDiv.className = 'status-message ' + type;
+            statusMessageDiv.style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
