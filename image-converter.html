@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Converter - Time Saving Tools</title>
+    <!-- Font Awesome for icons (if not already linked in a global CSS) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #333; /* Dark Gray Background */
+            color: #f4f4f4; /* Light Gray Text */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .tool-container {
+            width: 90%;
+            max-width: 700px; /* Adjusted max-width for a tool page */
+            margin: 30px auto;
+            padding: 25px;
+            background-color: #444; /* Section background */
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            flex-grow: 1;
+        }
+
+        /* Simple Header for Tool Page */
+        .tool-header {
+            background: #222;
+            color: #fff;
+            padding: 1rem 0;
+            border-bottom: 3px solid #FFD700; /* Yellow Accent */
+            text-align: center;
+            margin-bottom: 20px; /* Add margin below header for pages not using full site header */
+        }
+
+        .tool-header h1 a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 1.8em; /* Match main site logo size */
+        }
+        .tool-header .breadcrumb {
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+        .tool-header .breadcrumb a {
+            color: #ccc;
+            text-decoration: none;
+        }
+        .tool-header .breadcrumb a:hover {
+            color: #FFD700;
+        }
+
+
+        .tool-container h2 {
+            color: #FFD700; /* Yellow for section titles */
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.8em;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        .form-group input[type="file"],
+        .form-group select {
+            width: 100%;
+            padding: 12px; /* Increased padding */
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #3a3a3a;
+            color: #f4f4f4;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        
+        /* Style the file input button */
+        .form-group input[type="file"]::-webkit-file-upload-button {
+            background-color: #FFD700;
+            color: #333;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-right: 10px; /* Space between button and text */
+        }
+        .form-group input[type="file"]::-webkit-file-upload-button:hover {
+            background-color: #e6b800;
+        }
+        /* For Firefox */
+        .form-group input[type="file"] {
+            color: #ccc; /* Color for "No file chosen" text */
+        }
+        .form-group input[type="file"]:focus {
+            outline: 1px solid #FFD700;
+        }
+
+
+        .options-area {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+        .options-area .form-group {
+            flex: 1; /* Allow items to grow and shrink */
+            min-width: 200px; /* Minimum width before wrapping */
+        }
+
+        #qualityControl {
+            display: none; /* Hidden initially, shown via JS */
+            margin-top: 0.5rem; /* Add some space above if it appears */
+        }
+        #qualityControl label {
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+        #qualitySlider {
+            width: calc(100% - 100px); /* Adjust width for better layout */
+            vertical-align: middle;
+        }
+        #qualityValue {
+            font-weight: bold;
+            color: #FFD700;
+            vertical-align: middle;
+        }
+
+
+        .button-group {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        button, .download-button {
+            background-color: #FFD700;
+            color: #333;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: inline-flex; /* For aligning icon and text */
+            align-items: center;
+            gap: 8px; /* Space between icon and text */
+            margin: 5px;
+        }
+        button:hover, .download-button:hover {
+            background-color: #e6b800;
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            background-color: #555;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
+        }
+        button .fas, .download-button .fas {
+            font-size: 1.1em;
+        }
+
+        .preview-container {
+            margin-top: 2rem;
+            background-color: #3a3a3a;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #555;
+        }
+        .preview-container p {
+            margin:0 0 10px 0;
+            font-weight: bold;
+            color: #FFD700;
+        }
+        .preview-area img {
+            max-width: 100%;
+            max-height: 350px; /* Increased max height */
+            border: 2px solid #555;
+            border-radius: 4px;
+            display: block;
+            margin: 0 auto; /* Center the image */
+            background-color: #f4f4f4; /* Light background for image display */
+        }
+        .image-info {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #ccc;
+            text-align: center;
+        }
+        .image-info span {
+            font-weight: normal;
+            color: #f4f4f4;
+        }
+        .image-info strong {
+            color: #FFD700;
+        }
+
+        .output-area {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+        #downloadLink {
+            display: none; /* Hidden initially */
+        }
+        
+        .status-message {
+            text-align: center;
+            margin-top: 1rem;
+            padding: 12px; /* Increased padding */
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .status-message.success {
+            background-color: #4CAF50; /* Green */
+            color: white;
+        }
+        .status-message.error {
+            background-color: #D32F2F; /* Darker Red */
+            color: white;
+        }
+        .status-message.info {
+            background-color: #1976D2; /* Blue for info */
+            color: white;
+        }
+        
+        /* Simple Footer for Tool Page */
+        .tool-footer {
+            background: #222;
+            color: #ccc;
+            text-align: center;
+            padding: 1rem 0;
+            font-size: 0.9em;
+            border-top: 2px solid #FFD700;
+            margin-top: auto; /* Pushes footer to bottom */
+        }
+        .tool-footer a {
+            color: #FFD700;
+            text-decoration: none;
+        }
+        .tool-footer a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="tool-header">
+        <h1><a href="../index.html">Time Saving Tools</a></h1>
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a> > <span>Image Converter</span>
+        </div>
+    </header>
+
+    <div class="tool-container">
+        <h2><i class="fas fa-sync-alt"></i> Image Converter</h2>
+
+        <div class="form-group">
+            <label for="imageUpload"><i class="fas fa-upload"></i> Select Image:</label>
+            <input type="file" id="imageUpload" accept="image/png, image/jpeg, image/gif, image/webp, image/bmp">
+        </div>
+
+        <div class="options-area">
+            <div class="form-group">
+                <label for="outputFormat"><i class="fas fa-file-export"></i> Convert To:</label>
+                <select id="outputFormat">
+                    <option value="png">PNG</option>
+                    <option value="jpeg">JPEG</option>
+                    <option value="webp">WEBP</option>
+                    <!-- <option value="gif">GIF (Static Only)</option> -->
+                    <!-- <option value="bmp">BMP (Browser Support Varies)</option> -->
+                </select>
+            </div>
+            <div class="form-group" id="qualityControl">
+                <label for="qualitySlider">Quality: <span id="qualityValue">0.92</span></label>
+                <input type="range" id="qualitySlider" min="0.1" max="1.0" step="0.01" value="0.92" title="Adjust quality for JPEG/WEBP">
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button id="convertButton" disabled><i class="fas fa-cogs"></i> Convert Image</button>
+        </div>
+        
+        <div id="statusMessage" class="status-message" style="display: none;"></div>
+
+        <div class="preview-container" id="previewContainer" style="display: none;">
+            <p><i class="fas fa-image"></i> Original Image Preview:</p>
+            <div class="preview-area">
+                 <img id="imagePreview" src="#" alt="Image Preview">
+            </div>
+            <div class="image-info">
+                <p><strong>Filename:</strong> <span id="fileName"></span> | 
+                   <strong>Type:</strong> <span id="fileType"></span> | 
+                   <strong>Size:</strong> <span id="fileSize"></span>
+                </p>
+            </div>
+        </div>
+
+        <div class="output-area">
+            <a id="downloadLink" class="download-button" href="#" download="converted_image">
+                <i class="fas fa-download"></i> Download Converted Image
+            </a>
+        </div>
+
+    </div>
+
+    <footer class="tool-footer">
+        <p>© <span id="currentYearFooter"></span> <a href="../index.html">Time Saving Tools</a>. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        const imageUpload = document.getElementById('imageUpload');
+        const outputFormatSelect = document.getElementById('outputFormat');
+        const convertButton = document.getElementById('convertButton');
+        const downloadLink = document.getElementById('downloadLink');
+        
+        const previewContainer = document.getElementById('previewContainer');
+        const imagePreview = document.getElementById('imagePreview');
+        const statusMessage = document.getElementById('statusMessage');
+        
+        const fileNameDisplay = document.getElementById('fileName');
+        const fileTypeDisplay = document.getElementById('fileType');
+        const fileSizeDisplay = document.getElementById('fileSize');
+        
+        const qualityControlDiv = document.getElementById('qualityControl');
+        const qualitySlider = document.getElementById('qualitySlider');
+        const qualityValueDisplay = document.getElementById('qualityValue');
+
+        let originalFile = null;
+        let originalFileName = 'image'; // Default name part
+        let originalTypeMime = '';
+
+        function updateQualityControlVisibility() {
+            const format = outputFormatSelect.value;
+            if (format === 'jpeg' || format === 'webp') {
+                qualityControlDiv.style.display = 'block';
+            } else {
+                qualityControlDiv.style.display = 'none';
+            }
+        }
+        
+        // Initial check for quality control display
+        updateQualityControlVisibility();
+
+        imageUpload.addEventListener('change', function(event) {
+            originalFile = event.target.files[0];
+            if (originalFile) {
+                originalFileName = originalFile.name.split('.').slice(0, -1).join('.') || 'image';
+                originalTypeMime = originalFile.type;
+
+                fileNameDisplay.textContent = originalFile.name;
+                fileTypeDisplay.textContent = originalTypeMime;
+                fileSizeDisplay.textContent = (originalFile.size / 1024).toFixed(2) + ' KB';
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    convertButton.disabled = false;
+                    downloadLink.style.display = 'none';
+                    showStatus('Image loaded. Ready to convert.', 'info');
+                }
+                reader.onerror = function() {
+                    showStatus('Error reading file.', 'error');
+                    resetUI();
+                }
+                reader.readAsDataURL(originalFile);
+            } else {
+                resetUI();
+            }
+        });
+        
+        outputFormatSelect.addEventListener('change', updateQualityControlVisibility);
+
+        qualitySlider.addEventListener('input', function() {
+            qualityValueDisplay.textContent = this.value;
+        });
+
+
+        convertButton.addEventListener('click', function() {
+            if (!originalFile || !imagePreview.src || imagePreview.src === '#') {
+                showStatus('Please select a valid image file first.', 'error');
+                return;
+            }
+
+            convertButton.disabled = true;
+            convertButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Converting...';
+            showStatus('Processing your image... please wait.', 'info');
+            downloadLink.style.display = 'none';
+
+            const outputFormat = outputFormatSelect.value; // e.g., "png", "jpeg"
+            const mimeType = `image/${outputFormat}`; // e.g., "image/png"
+            const quality = parseFloat(qualitySlider.value);
+
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.naturalWidth; // Use naturalWidth/Height for accurate dimensions
+                canvas.height = img.naturalHeight;
+                const ctx = canvas.getContext('2d');
+
+                // If original is transparent and output is JPEG (which doesn't support transparency),
+                // draw a white background first.
+                if (mimeType === 'image/jpeg' && (originalTypeMime === 'image/png' || originalTypeMime === 'image/gif' || originalTypeMime === 'image/webp')) {
+                     ctx.fillStyle = '#FFFFFF';
+                     ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+                
+                ctx.drawImage(img, 0, 0);
+
+                let convertedDataUrl;
+                try {
+                    if (mimeType === 'image/jpeg' || mimeType === 'image/webp') {
+                         convertedDataUrl = canvas.toDataURL(mimeType, quality);
+                    } else { // PNG, or other types that don't use quality param from toDataURL
+                         convertedDataUrl = canvas.toDataURL(mimeType);
+                    }
+                } catch (e) {
+                    console.error("Canvas toDataURL error:", e);
+                    showStatus(`Error during conversion to ${outputFormat.toUpperCase()}. The format may not be fully supported for conversion by your browser or there's an issue with the image. Consider trying PNG.`, 'error');
+                    restoreConvertButton();
+                    return;
+                }
+               
+
+                if (!convertedDataUrl || convertedDataUrl === "data:,") { // "data:," can be result of empty canvas or error
+                     showStatus(`Failed to convert image. Output for ${outputFormat.toUpperCase()} was empty. Please try another format or image.`, 'error');
+                } else {
+                    downloadLink.href = convertedDataUrl;
+                    downloadLink.download = `${originalFileName}_converted.${outputFormat}`;
+                    downloadLink.style.display = 'inline-flex';
+                    showStatus(`Successfully converted image to ${outputFormat.toUpperCase()}!`, 'success');
+                }
+                restoreConvertButton();
+            };
+
+            img.onerror = function() {
+                showStatus('The selected image could not be loaded for conversion. It might be corrupted or in an unsupported format.', 'error');
+                restoreConvertButton();
+            };
+            
+            img.src = imagePreview.src; // Use the Data URL from the FileReader (already loaded in preview)
+        });
+
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = 'status-message ' + type;
+            statusMessage.style.display = 'block';
+        }
+
+        function restoreConvertButton() {
+            convertButton.disabled = false;
+            convertButton.innerHTML = '<i class="fas fa-cogs"></i> Convert Image';
+        }
+        
+        function resetUI() {
+            convertButton.disabled = true;
+            previewContainer.style.display = 'none';
+            imagePreview.src = '#';
+            downloadLink.style.display = 'none';
+            statusMessage.style.display = 'none';
+            fileNameDisplay.textContent = '';
+            fileTypeDisplay.textContent = '';
+            fileSizeDisplay.textContent = '';
+            imageUpload.value = null; // Clear the file input
+            originalFile = null;
+        }
+
+    </script>
+</body>
+</html>
