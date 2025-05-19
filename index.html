@@ -1,170 +1,515 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Time Saving Tools</title>
-  <style>
-    :root {
-      --primary: #f7dc6f;
-      --secondary: #5d6d7e;
-      --bg: #f8f9fa;
-    }
+    <meta charset="UTF-UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Saving Tools</title>
+    <!-- Font Awesome for social media icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: #333; /* Dark Gray Background */
+            color: #f4f4f4; /* Light Gray Text */
+        }
 
-    body {
-      background-color: var(--bg);
-      color: var(--secondary);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      padding: 2rem;
-    }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            overflow: hidden;
+            padding: 0 20px;
+        }
 
-    .logo-container {
-      animation: bounceIn 2s ease-out forwards;
-    }
+        /* Header Styling */
+        header {
+            background: #222; /* Darker Gray for Header */
+            color: #fff;
+            padding: 1rem 0;
+            border-bottom: 3px solid #FFD700; /* Yellow Accent */
+        }
 
-    .logo {
-      font-size: 4rem;
-      font-weight: 900;
-      line-height: 1.2;
-    }
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .logo span {
-      color: var(--primary);
-    }
+        .logo a {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #FFD700; /* Yellow */
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+        }
 
-    @keyframes bounceIn {
-      0% {
-        opacity: 0;
-        transform: translateY(-40px) scale(0.8);
-      }
-      60% {
-        opacity: 1;
-        transform: translateY(10px) scale(1.05);
-      }
-      80% {
-        transform: translateY(-5px) scale(0.98);
-      }
-      100% {
-        transform: translateY(0) scale(1);
-      }
-    }
+        /* Simple shine animation for logo text */
+        .logo a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 70%; /* Width of the shine element */
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: shine 5s infinite linear; /* Animation properties */
+        }
 
-    .subtitle {
-      font-size: 1.3rem;
-      margin-top: 1.5rem;
-      color: #444;
-      max-width: 600px;
-    }
+        @keyframes shine {
+            0% { left: -75%; } /* Start from off-screen left */
+            100% { left: 125%; } /* End off-screen right */
+        }
 
-    .btn {
-      margin-top: 2rem;
-      padding: 0.8rem 2rem;
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: white;
-      background-color: var(--secondary);
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-      text-decoration: none;
-      display: inline-block;
-    }
 
-    .btn:hover {
-      background-color: #4a5568;
-    }
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
 
-    .tool-links {
-      margin-top: 4rem;
-      max-width: 600px;
-      width: 100%;
-    }
+        nav ul li {
+            margin-left: 20px;
+            position: relative; /* For dropdown positioning */
+        }
 
-    .tool-links h3 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: var(--secondary);
-    }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 0.8rem;
+            display: block;
+            transition: color 0.3s ease;
+        }
 
-    .tool-links ul {
-      list-style: none;
-      padding-left: 0;
-    }
+        nav ul li a:hover,
+        nav ul li a.active {
+            color: #FFD700; /* Yellow on hover/active */
+        }
 
-    .tool-links li {
-      margin: 10px 0;
-    }
+        /* Dropdown Menu */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #444; /* Slightly lighter gray for dropdown */
+            min-width: 220px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.3);
+            z-index: 1;
+            border-top: 2px solid #FFD700;
+        }
 
-    .tool-links a {
-      text-decoration: none;
-      color: var(--secondary);
-      font-weight: 500;
-      border-bottom: 1px solid transparent;
-      transition: 0.3s ease;
-    }
+        .dropdown-content a {
+            color: #f4f4f4;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.9em;
+        }
 
-    .tool-links a:hover {
-      border-bottom-color: var(--primary);
-    }
+        .dropdown-content a:hover {
+            background-color: #555;
+            color: #FFD700;
+        }
 
-    footer {
-      position: absolute;
-      bottom: 20px;
-      font-size: 0.9rem;
-      color: #aaa;
-    }
+        /* Show dropdown on hover */
+        nav ul li:hover .dropdown-content {
+            display: block;
+        }
+        
+        /* Styling for current page nav item - JavaScript might be needed for more complex scenarios */
+        nav ul li a.current-page {
+            color: #FFD700;
+            font-weight: bold;
+        }
 
-  </style>
+
+        /* Main Content Area */
+        main {
+            padding: 2rem 0;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background-color: #444; /* Section background */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .section h2 {
+            color: #FFD700; /* Yellow for section titles */
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .tool-button {
+            background-color: #FFD700; /* Yellow background */
+            color: #333; /* Dark text on yellow button */
+            border: none;
+            padding: 0.8rem 1rem;
+            font-size: 1em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-align: center;
+            text-decoration: none; /* If using <a> tags as buttons */
+            display: block; /* If using <a> tags */
+        }
+
+        .tool-button:hover {
+            background-color: #e6b800; /* Darker yellow on hover */
+            transform: translateY(-2px);
+        }
+
+        /* Footer Styling */
+        footer {
+            background: #222; /* Darker Gray for Footer */
+            color: #ccc;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+            border-top: 3px solid #FFD700; /* Yellow Accent */
+        }
+
+        footer .container {
+            display: flex;
+            flex-direction: column; /* Stack items vertically on small screens */
+            align-items: center;
+        }
+        
+        .footer-columns {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap; /* Allow columns to wrap on smaller screens */
+        }
+
+        .footer-column {
+            flex: 1;
+            padding: 0 1rem; /* Add some padding to columns */
+            min-width: 200px; /* Minimum width for columns before wrapping */
+            margin-bottom: 1rem; /* Space between columns when they wrap */
+        }
+
+        .footer-column h4 {
+            color: #FFD700; /* Yellow for footer headings */
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 0.9em;
+            line-height: 1.8;
+        }
+
+        .footer-column ul li a:hover {
+            color: #FFD700;
+        }
+        
+        .footer-column p {
+             font-size: 0.9em;
+             line-height: 1.8;
+        }
+
+        .social-media-icons a {
+            color: #ccc;
+            margin: 0 10px;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-media-icons a:hover {
+            color: #FFD700; /* Yellow on hover */
+        }
+
+        footer .copyright {
+            margin-top: 1rem;
+            font-size: 0.9em;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            nav ul {
+                flex-direction: column;
+                margin-top: 1rem;
+            }
+
+            nav ul li {
+                margin-left: 0;
+                margin-bottom: 0.5rem;
+                text-align: center;
+            }
+            
+            .dropdown-content {
+                position: static; /* Dropdowns behave differently on mobile */
+                background-color: #3a3a3a;
+            }
+
+            .footer-columns {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .footer-column {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+    </style>
 </head>
 <body>
 
-  <!-- Centered Logo -->
-  <div class="logo-container">
-    <div class="logo">Time<span>Saving</span>Tools</div>
-    <p class="subtitle">Fast, Easy & Free Tools to Save Your Time.</p>
-    <a href="#tools-section" class="btn">Explore Tools</a>
-  </div>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">Time Saving Tools</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn">Image Tools <i class="fas fa-chevron-down fa-xs"></i></a>
+                        <div class="dropdown-content">
+                            <a href="#image-tools-section">All Image Tools</a>
+                            <a href="tools/image_converter.html">Image Converter</a>
+                            <a href="tools/image_generator.html">Image Generator</a>
+                            <a href="tools/image_compressor.html">Image Compressor</a>
+                            <a href="tools/remove_background.html">Remove Background</a>
+                            <a href="tools/photo_enhancer.html">Photo Enhancer</a>
+                            <a href="tools/pan_card_resizer.html">Pan Card Photo Resizer</a>
+                            <a href="tools/pan_signature_resizer.html">Pan Signature Resizer</a>
+                            <a href="tools/passport_photo_editor.html">Passport Photo Editor</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn">PDF Tools <i class="fas fa-chevron-down fa-xs"></i></a>
+                        <div class="dropdown-content">
+                            <a href="#pdf-tools-section">All PDF Tools</a>
+                            <a href="tools/pdf_editor.html">PDF Editor</a>
+                            <a href="tools/pdf_resizer.html">PDF Resizer</a>
+                            <a href="tools/pdf_to_word.html">PDF to Word</a>
+                            <a href="tools/image_to_pdf.html">Image to PDF</a>
+                            <a href="tools/pdf_unlocked.html">PDF Unlocker</a>
+                            <a href="tools/pdf_signature.html">PDF Signature</a>
+                            <a href="tools/word_to_pdf.html">Word to PDF</a>
+                            <a href="tools/merge_pdf.html">Merge PDF</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn">AI Tools <i class="fas fa-chevron-down fa-xs"></i></a>
+                        <div class="dropdown-content">
+                            <a href="#ai-tools-section">All AI Tools</a>
+                            <a href="tools/ai_voice_generator.html">Voice Generator</a>
+                            <a href="tools/ai_text_to_voice.html">Text to Voice</a>
+                            <a href="tools/ai_assamese_voice_to_text.html">Assamese Voice into Text</a>
+                            <a href="tools/ai_voice_to_text.html">Voice to Text</a>
+                            <a href="tools/ai_explore_more.html">Explore More AI</a>
+                        </div>
+                    </li>
+                    <li class="dropdown"> <!-- General 'Tools' or specific like Calculators -->
+                        <a href="javascript:void(0)" class="dropbtn">More Tools <i class="fas fa-chevron-down fa-xs"></i></a>
+                        <div class="dropdown-content">
+                             <a href="#calculator-section">Calculators</a>
+                             <a href="tools/age_calculator.html">Age Calculator</a>
+                             <a href="tools/sip_calculator.html">SIP Calculator</a>
+                             <a href="tools/swp_calculator.html">SWP Calculator</a>
+                             <a href="#educational-section">Educational Tools</a>
+                             <a href="tools/edu_ai_teacher.html">AI Teacher</a>
+                             <a href="tools/edu_maths_teacher.html">Maths Teacher</a>
+                             <!-- Add other educational tools -->
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn">Services <i class="fas fa-chevron-down fa-xs"></i></a>
+                         <div class="dropdown-content">
+                            <a href="#services-section">All Services</a>
+                            <a href="services/interior_designer.html">Interior Designer</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-  <!-- Tools Section -->
-  <section id="tools-section" class="tool-links">
-    <h3>🛠️ Available Tools</h3>
-    <ul>
-      <!-- Image Tools -->
-      <li><a href="image-converter.html">📷 Image Converter</a></li>
-      <li><a href="image-compressor.html">📷 Image Compressor</a></li>
-      <li><a href="passport-photo-editor.html">📷 Passport Photo Editor</a></li>
+    <main>
+        <div class="container">
+            <!-- Hero Section (Optional) -->
+            <section class="section hero-section" style="text-align: center; background-color: #2a2a2a;">
+                <h1>Welcome to Time Saving Tools!</h1>
+                <p style="font-size: 1.2em; color: #ccc;">Your one-stop solution for various online utilities.</p>
+            </section>
 
-      <!-- PDF Tools -->
-      <li><a href="pdf-editor.html">📄 PDF Editor</a></li>
-      <li><a href="pdf-to-word.html">📄 PDF to Word</a></li>
-      <li><a href="merge-pdf.html">📄 Merge PDF</a></li>
+            <!-- Image Tools Section -->
+            <section id="image-tools-section" class="section">
+                <h2>Image Tools</h2>
+                <div class="tools-grid">
+                    <a href="tools/image_converter.html" class="tool-button">Image Converter</a>
+                    <a href="tools/image_generator.html" class="tool-button">Image Generator</a>
+                    <a href="tools/image_compressor.html" class="tool-button">Image Compressor</a>
+                    <a href="tools/remove_background.html" class="tool-button">Remove Background</a>
+                    <a href="tools/photo_enhancer.html" class="tool-button">Photo Enhancer</a>
+                    <a href="tools/pan_card_resizer.html" class="tool-button">Pan Card Photo Resizer</a>
+                    <a href="tools/pan_signature_resizer.html" class="tool-button">Pan Signature Resizer</a>
+                    <a href="tools/passport_photo_editor.html" class="tool-button">Passport Photo Editor (One Click)</a>
+                </div>
+            </section>
 
-      <!-- AI Tools -->
-      <li><a href="text-to-voice.html">🤖 Text to Voice</a></li>
-      <li><a href="voice-to-text.html">🤖 Voice to Text</a></li>
+            <!-- PDF Tools Section -->
+            <section id="pdf-tools-section" class="section">
+                <h2>PDF Tools</h2>
+                <div class="tools-grid">
+                    <a href="tools/pdf_editor.html" class="tool-button">PDF Editor</a>
+                    <a href="tools/pdf_resizer.html" class="tool-button">PDF Resizer</a>
+                    <a href="tools/pdf_to_word.html" class="tool-button">PDF to Word</a>
+                    <a href="tools/image_to_pdf.html" class="tool-button">Image to PDF</a>
+                    <a href="tools/pdf_unlocked.html" class="tool-button">PDF Unlocker</a>
+                    <a href="tools/pdf_signature.html" class="tool-button">PDF Signature</a>
+                    <a href="tools/word_to_pdf.html" class="tool-button">Word to PDF</a>
+                    <a href="tools/merge_pdf.html" class="tool-button">Merge PDF</a>
+                </div>
+            </section>
 
-      <!-- Calculator -->
-      <li><a href="age-calculator.html">🧮 Age Calculator</a></li>
-    </ul>
-  </section>
+            <!-- AI Tools Section -->
+            <section id="ai-tools-section" class="section">
+                <h2>AI Tools</h2>
+                <div class="tools-grid">
+                    <a href="tools/ai_voice_generator.html" class="tool-button">Voice Generator</a>
+                    <a href="tools/ai_text_to_voice.html" class="tool-button">Text to Voice</a>
+                    <a href="tools/ai_assamese_voice_to_text.html" class="tool-button">Assamese Voice into Text</a>
+                    <a href="tools/ai_voice_to_text.html" class="tool-button">Voice to Text</a>
+                    <a href="tools/ai_explore_more.html" class="tool-button">Explore More AI</a>
+                </div>
+            </section>
 
-  <!-- Footer -->
-  <footer>
-    &copy; 2025 TimeSavingTools. All rights reserved.
-  </footer>
+            <!-- Calculator Section -->
+            <section id="calculator-section" class="section">
+                <h2>Calculators</h2>
+                <div class="tools-grid">
+                    <a href="tools/age_calculator.html" class="tool-button">Age Calculator</a>
+                    <a href="tools/sip_calculator.html" class="tool-button">SIP Calculator</a>
+                    <a href="tools/swp_calculator.html" class="tool-button">SWP Calculator</a>
+                </div>
+            </section>
+
+            <!-- Educational Section -->
+            <section id="educational-section" class="section">
+                <h2>Educational Tools</h2>
+                <div class="tools-grid">
+                    <a href="tools/edu_ai_teacher.html" class="tool-button">AI Teacher</a>
+                    <a href="tools/edu_maths_teacher.html" class="tool-button">Maths Teacher</a>
+                    <a href="tools/edu_history_teacher.html" class="tool-button">History Teacher</a>
+                    <a href="tools/edu_science_teacher.html" class="tool-button">Science Teacher</a>
+                    <a href="tools/edu_technology_teacher.html" class="tool-button">Technology Teacher</a>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services-section" class="section">
+                <h2>Services</h2>
+                <div class="tools-grid">
+                    <a href="services/interior_designer.html" class="tool-button">Interior Designer</a>
+                    <!-- Add other services here -->
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h4>About "Time Saving Tools"</h4>
+                    <p>हमारा लक्ष्य है आपका कीमती समय बचाने वाले उपयोगी उपकरण एक ही स्थान पर उपलब्ध कराना।</p>
+                    <p><a href="about.html" style="color:#FFD700;">और जानें...</a></p>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#image-tools-section">Image Tools</a></li>
+                        <li><a href="#pdf-tools-section">PDF Tools</a></li>
+                        <li><a href="#ai-tools-section">AI Tools</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Contact Information</h4>
+                    <p><i class="fas fa-envelope"></i> Email: your-email@example.com</p>
+                    <p><i class="fas fa-phone"></i> Phone: +91-XXXXXXXXXX</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Address: Your City, India</p>
+                    <p><a href="contact.html" style="color:#FFD700;">Contact Us Page</a></p>
+                </div>
+            </div>
+            <div class="social-media-icons">
+                <a href="#" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" target="_blank" title="X (Twitter)"><i class="fab fa-xing"></i></a> <!-- Changed to X icon if desired, or use fa-twitter -->
+                <a href="#" target="_blank" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+            </div>
+            <div class="copyright">
+                <p>© <span id="currentYear"></span> Time Saving Tools. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript for dynamic year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Simple script for active navigation link (can be expanded)
+        // This is a very basic version. For multi-page sites, server-side or more complex JS is better.
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentLocation = window.location.pathname;
+            const navLinks = document.querySelectorAll('nav ul li a');
+
+            navLinks.forEach(link => {
+                // If link's href matches current page, add 'active' class
+                // This basic example works best if your hrefs exactly match like "/index.html" or "/"
+                // For complex paths, you might need more sophisticated logic
+                if (link.getAttribute('href') === currentLocation.substring(currentLocation.lastIndexOf('/') + 1) || 
+                    (currentLocation.endsWith('/') && link.getAttribute('href') === 'index.html')) {
+                    // link.classList.add('current-page'); // Or your active class
+                }
+
+                // Handling dropdowns: Prevent default for "javascript:void(0)" and toggle active
+                if(link.getAttribute('href') === 'javascript:void(0)'){
+                    link.addEventListener('click', function(e) {
+                        // Toggle an 'active-dropdown' class on the parent li or the link itself
+                        // For hover-based CSS dropdowns like this example, this might not be strictly needed
+                        // but can be useful for click-based mobile menus or ARIA states
+                        // For now, CSS handles hover, so this part is minimal.
+                    });
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
