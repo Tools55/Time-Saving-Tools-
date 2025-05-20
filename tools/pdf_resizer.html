@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Resize करें - Time Saving Tools</title>
+    <!-- हेड सेक्शन में स्टाइलिंग के लिए CSS -->
+    <style>
+        /* बेसिक स्टाइलिंग */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px; /* कंटेंट की अधिकतम चौड़ाई */
+            margin: 20px auto; /* ऊपर नीचे 20px मार्जिन, दाएं बाएं ऑटो (बीच में लाने के लिए) */
+            padding: 0 20px; /* कंटेंट के चारों ओर पैडिंग */
+        }
+
+        /* हेडर की स्टाइलिंग (पहले जैसी ही) */
+        header {
+            background-color: #fff;
+            padding: 20px 0;
+            text-align: center; /* हेडर टेक्स्ट को बीच में करें */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* हल्का शैडो */
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2.5em; /* हेडर टेक्स्ट का आकार */
+            margin: 0;
+            font-weight: bold;
+
+            /* रंगीन एनिमेटेड टेक्स्ट के लिए */
+            background: linear-gradient(270deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            background-size: 400% auto; /* ग्रेडिएंट को टेक्स्ट से ज़्यादा चौड़ा बनाएं */
+            -webkit-background-clip: text; /* बैकग्राउंड को टेक्स्ट के आकार में क्लिप करें */
+            background-clip: text; /* बैकग्राउंड को टेक्स्ट के आकार में क्लिप करें */
+            color: transparent; /* टेक्स्ट का रंग पारदर्शी करें */
+            animation: gradientAnimation 10s linear infinite; /* एनीमेशन लागू करें */
+            display: inline-block; /* 'background-clip' के सही काम करने के लिए */
+        }
+
+        /* ग्रेडिएंट एनीमेशन की परिभाषा */
+        @keyframes gradientAnimation {
+            0% { background-position: 0% center; }
+            100% { background-position: 400% center; }
+        }
+
+        /* मुख्य कंटेंट क्षेत्र की स्टाइलिंग */
+        main {
+            background-color: #fff;
+            padding: 30px; /* पैडिंग बढ़ाएं */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* हल्का शैडो */
+            border-radius: 8px; /* किनारे हल्के गोल करें */
+            text-align: center; /* मुख्य सामग्री को बीच में करें */
+        }
+
+        main h2 {
+            text-align: center;
+            color: #f39c12; /* शीर्षक का रंग (पीला-नारंगी) */
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+         main p {
+             margin-bottom: 20px;
+         }
+
+
+        .tool-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd; /* सेक्शन के चारों ओर बॉर्डर */
+            border-radius: 5px;
+            background-color: #f9f9f9; /* हल्का बैकग्राउंड रंग */
+            text-align: left; /* टेक्स्ट को बाएं संरेखित करें */
+        }
+         .tool-section h3 {
+             text-align: center; /* इस हेडिंग को बीच में रखें */
+             margin-top: 0;
+             color: #555;
+         }
+
+
+        .file-upload-area {
+            border: 2px dashed #f39c12; /* डैशेड बॉर्डर (पीला-नारंगी) */
+            padding: 40px 20px; /* पैडिंग बढ़ाएं */
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #fdf5eb; /* हल्का पीला बैकग्राउंड */
+            cursor: pointer; /* माउस पॉइंटर को हाथ वाला बनाएं */
+            transition: border-color 0.3s ease, background-color 0.3s ease; /* होवर पर बदलाव के लिए एनीमेशन */
+        }
+
+        .file-upload-area:hover {
+            border-color: #e67e22; /* होवर पर गहरा नारंगी */
+            background-color: #fae5cd; /* होवर पर गहरा बैकग्राउंड */
+        }
+
+         /* ड्रैग-एंड-ड्रॉप के दौरान हाईलाइट स्टाइल */
+        .file-upload-area.highlight {
+            border-color: #e67e22;
+            background-color: #f8e9da; /* हल्का नारंगी हाईलाइट */
+        }
+
+         .file-upload-area .upload-icon {
+             font-size: 3em; /* आइकन का आकार */
+             color: #f39c12; /* आइकन का रंग */
+             margin-bottom: 10px;
+         }
+
+
+        .file-upload-area input[type="file"] {
+            display: none; /* डिफ़ॉल्ट फ़ाइल इनपुट को छिपा दें */
+        }
+
+         .file-upload-area label {
+            display: block; /* लेबल को ब्लॉक तत्व बनाएं */
+            cursor: pointer; /* लेबल पर भी हाथ वाला पॉइंटर दिखे */
+            font-size: 1.2em; /* लेबल फ़ॉन्ट आकार */
+            font-weight: bold;
+            color: #34495e; /* लेबल टेक्स्ट का रंग */
+         }
+
+         .file-upload-area p {
+             margin-top: 10px;
+             font-size: 0.9em;
+             color: #7f8c8d;
+         }
+
+         #file-name {
+             margin-top: 15px;
+             font-size: 1.1em;
+             font-weight: bold;
+             color: #2c3e50; /* गहरा नीला रंग */
+             min-height: 1.3em; /* नाम न होने पर भी स्पेस बनाए रखने के लिए */
+             text-align: center; /* नाम को बीच में रखें */
+         }
+
+        .resize-options {
+            margin-top: 20px;
+        }
+
+        .resize-options label {
+            display: block; /* लेबल को ब्लॉक बनाएं */
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        .resize-options select,
+        .resize-options input[type="number"] {
+            width: calc(100% - 22px); /* पैडिंग और बॉर्डर के लिए जगह छोड़ें */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box; /* चौड़ाई में पैडिंग और बॉर्डर शामिल करें */
+        }
+
+         .custom-size-inputs {
+             display: flex; /* इनपुट्स को एक लाइन में रखें */
+             gap: 15px; /* इनपुट्स के बीच की दूरी */
+             margin-top: 10px;
+         }
+         .custom-size-inputs div {
+             flex: 1; /* उपलब्ध स्थान को समान रूप से साझा करें */
+         }
+         .custom-size-inputs label {
+             font-weight: normal; /* कस्टम इनपुट लेबल को सामान्य फ़ॉन्ट वजन दें */
+             margin-bottom: 4px;
+             font-size: 0.9em;
+         }
+
+
+        .resize-button-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .resize-button {
+            display: inline-block; /* बटन को सामग्री के अनुसार चौड़ाई दें */
+            padding: 15px 30px; /* पैडिंग */
+            background-color: #e67e22; /* नारंगी रंग */
+            color: white; /* टेक्स्ट का रंग */
+            text-align: center;
+            border: none; /* बॉर्डर नहीं */
+            border-radius: 5px; /* किनारे गोल */
+            cursor: pointer;
+            font-size: 1.2em; /* फ़ॉन्ट आकार */
+            font-weight: bold;
+            transition: background-color 0.3s ease; /* होवर एनीमेशन */
+            margin-top: 20px;
+        }
+
+        .resize-button:hover {
+            background-color: #d35400; /* होवर पर गहरा नारंगी */
+        }
+
+         #status-message {
+             margin-top: 15px;
+             font-weight: bold;
+             color: #555;
+             min-height: 1.5em; /* मैसेज न होने पर भी स्पेस बनाए रखने के लिए */
+         }
+
+
+        .result-area {
+            margin-top: 30px;
+            padding: 30px;
+            border: 2px dashed #2ecc71; /* हरा डैशेड बॉर्डर */
+            border-radius: 5px;
+            min-height: 80px; /* न्यूनतम ऊंचाई */
+            background-color: #ecf0f1; /* हल्का नीला-ग्रे बैकग्राउंड */
+            text-align: center;
+            color: #27ae60; /* टेक्स्ट का रंग */
+            font-style: italic; /* टेक्स्ट को इटैलिक करें */
+            display: flex; /* फ्लेक्सबॉक्स लेआउट */
+            justify-content: center; /* क्षैतिज रूप से बीच में करें */
+            align-items: center; /* लंबवत रूप से बीच में करें */
+            display: none; /* शुरुआत में छिपा हुआ */
+        }
+
+        .result-area p {
+             margin: 0; /* डिफ़ॉल्ट पैराग्राफ मार्जिन हटा दें */
+        }
+
+        .result-area a {
+             color: #27ae60; /* लिंक का रंग */
+             text-decoration: none; /* अंडरलाइन हटा दें */
+             font-weight: bold;
+        }
+
+         .result-area a:hover {
+             text-decoration: underline; /* होवर पर अंडरलाइन करें */
+         }
+
+
+        /* फुटर की स्टाइलिंग */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 20px;
+            color: #777;
+            font-size: 0.9em; /* फ़ॉन्ट आकार */
+        }
+
+         /* छोटी स्क्रीन के लिए मीडिया क्वेरी */
+         @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8em; /* छोटी स्क्रीन पर फ़ॉन्ट छोटा करें */
+            }
+             .file-upload-area {
+                 padding: 30px 10px; /* पैडिंग कम करें */
+             }
+             .file-upload-area label {
+                 font-size: 1em; /* फ़ॉन्ट आकार कम करें */
+             }
+              .resize-button {
+                padding: 12px 20px; /* पैडिंग कम करें */
+                font-size: 1em; /* फ़ॉन्ट आकार कम करें */
+             }
+             .resize-options select,
+             .resize-options input[type="number"] {
+                 width: calc(100% - 20px); /* छोटी स्क्रीन के लिए एडजस्ट करें */
+             }
+              .custom-size-inputs {
+                 flex-direction: column; /* छोटी स्क्रीन पर इनपुट्स को स्टैक करें */
+                 gap: 0; /* गैप हटा दें */
+             }
+             .custom-size-inputs div {
+                 flex: none; /* फ्लेक्स व्यवहार हटा दें */
+                 width: 100%; /* पूरी चौड़ाई लें */
+             }
+             .custom-size-inputs label,
+             .custom-size-inputs input {
+                 margin-bottom: 10px; /* नीचे मार्जिन जोड़ें जब स्टैक्ड हो */
+             }
+         }
+
+    </style>
+    <!-- pdf-lib लाइब्रेरी को CDN से लोड करें -->
+    <!-- Promise polyfill कुछ पुराने ब्राउज़र के लिए (वैकल्पिक) -->
+     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+
+</head>
+<body>
+
+    <!-- हेडर सेक्शन -->
+    <header>
+        <!-- वेबसाइट का नाम - रंगीन और एनिमेटेड -->
+        <h1>Time Saving Tools</h1>
+    </header>
+
+    <!-- मुख्य कंटेंट के लिए कंटेनर -->
+    <div class="container">
+        <main>
+            <!-- पेज का मुख्य शीर्षक -->
+            <h2>PDF Resize करें</h2>
+
+            <p>अपनी PDF फ़ाइल का पेज आकार बदलें।</p>
+             <p><small><strong>नोट:</strong> यह टूल PDF पेज का आकार बदलता है और मूल सामग्री को नए आकार में फिट करने का प्रयास करता है। जटिल लेआउट वाले PDF में परिणाम भिन्न हो सकते हैं।</small></p>
+
+
+            <!-- फ़ाइल अपलोड सेक्शन -->
+            <div class="tool-section">
+                <h3>अपनी PDF फ़ाइल चुनें</h3>
+
+                <div class="file-upload-area" id="drop-area">
+                    <!-- हिडन फ़ाइल इनपुट। लेबल पर क्लिक करने से यह सक्रिय होगा। -->
+                    <input type="file" accept=".pdf" id="pdfFile" />
+                    <!-- लेबल जो क्लिक करने योग्य क्षेत्र के रूप में काम करेगा -->
+                    <label for="pdfFile">अपनी PDF फ़ाइल चुनें या यहां ड्रैग और ड्रॉप करें</label>
+                    <p>केवल .pdf फ़ाइलें स्वीकार की जाती हैं।</p>
+                    <!-- चुनी गई फ़ाइल का नाम दिखाने के लिए -->
+                    <p id="file-name"></p>
+                </div>
+
+            </div>
+
+             <!-- आकार विकल्प सेक्शन -->
+             <div class="tool-section resize-options" id="resize-options-section" style="display: none;">
+                 <h3>नया पेज आकार चुनें</h3>
+
+                 <label for="pageSize">प्रीसेट आकार:</label>
+                 <select id="pageSize">
+                     <option value="A4">A4 (210x297 mm)</option>
+                     <option value="Letter">Letter (8.5x11 inches)</option>
+                     <option value="Legal">Legal (8.5x14 inches)</option>
+                     <option value="A3">A3 (297x420 mm)</option>
+                     <option value="A5">A5 (148x210 mm)</option>
+                     <option value="Custom">Custom</option>
+                 </select>
+
+                 <div id="custom-size-inputs" class="custom-size-inputs" style="display: none;">
+                     <div>
+                        <label for="customWidth">कस्टम चौड़ाई (pt):</label>
+                        <input type="number" id="customWidth" placeholder="जैसे 595" min="1" value="595">
+                     </div>
+                     <div>
+                        <label for="customHeight">कस्टम ऊंचाई (pt):</label>
+                        <input type="number" id="customHeight" placeholder="जैसे 842" min="1" value="842">
+                     </div>
+                     <p><small>इकाइयाँ पॉइंट्स (pt) में हैं (1 इंच = 72 पॉइंट्स)। A4 लगभग 595 x 842 पॉइंट्स है।</small></p>
+                 </div>
+
+             </div>
+
+
+            <!-- Resize बटन सेक्शन -->
+            <div class="resize-button-section">
+                 <!-- बटन पर क्लिक करने पर JavaScript फ़ंक्शन कॉल करें -->
+                <button class="resize-button" id="resizeBtn">PDF Resize करें</button>
+                 <p id="status-message"></p> <!-- स्थिति संदेश दिखाने के लिए -->
+            </div>
+
+            <!-- परिणाम क्षेत्र -->
+             <div class="result-area" id="result-area">
+                 <!-- Resize की गई फ़ाइल का डाउनलोड लिंक यहां दिखेगा -->
+             </div>
+
+        </main>
+    </div>
+
+    <!-- फुटर सेक्शन -->
+    <footer>
+        <p>© 2023 Time Saving Tools. All rights reserved.</p>
+    </footer>
+
+    <!-- फ़ाइल हैंडलिंग और Resize के लिए JavaScript -->
+    <script>
+        // pdf-lib लाइब्रेरी का संदर्भ प्राप्त करें (CDN से लोड होने के बाद)
+        const { PDFDocument, StandardFonts, rgb } = PDFLib; // rgb भी जोड़ें यदि आवश्यकता हो
+
+        // HTML तत्वों का संदर्भ प्राप्त करें
+        const fileInput = document.getElementById('pdfFile');
+        const fileNameDisplay = document.getElementById('file-name');
+        const fileUploadLabel = document.querySelector('.file-upload-area label');
+        const dropArea = document.getElementById('drop-area');
+        const resizeOptionsSection = document.getElementById('resize-options-section');
+        const pageSizeSelect = document.getElementById('pageSize');
+        const customSizeInputsDiv = document.getElementById('custom-size-inputs');
+        const customWidthInput = document.getElementById('customWidth');
+        const customHeightInput = document.getElementById('customHeight');
+        const resizeButton = document.getElementById('resizeBtn');
+        const statusMessage = document.getElementById('status-message');
+        const resultArea = document.getElementById('result-area');
+
+        let selectedFile = null; // चुनी गई फ़ाइल को स्टोर करने के लिए
+
+        // सामान्य पेज आकार (पॉइंट्स में)
+        const pageSizes = {
+            A4: [595.28, 841.89],
+            Letter: [612, 792],
+            Legal: [612, 1008],
+            A3: [841.89, 1189.00],
+            A5: [420.94, 595.28],
+            // आप यहां और भी आकार जोड़ सकते हैं
+        };
+
+        // फ़ाइल इनपुट में बदलाव होने पर फ़ाइल को हैंडल करें
+        fileInput.addEventListener('change', function() {
+            handleFiles(fileInput.files);
+        });
+
+        // ड्रैग और ड्रॉप कार्यक्षमता
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // ड्रैग करते समय हाईलाइट करें
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
+        });
+
+        // ड्रैग खत्म होने या ड्रॉप होने पर हाईलाइट हटा दें
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+        });
+
+        // फ़ाइल ड्रॉप होने पर हैंडल करें
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        // फ़ाइलों को प्रोसेस करें (चाहे इनपुट से चुनें या ड्रॉप करें)
+        function handleFiles(files) {
+            selectedFile = null; // पिछली फ़ाइल को साफ़ करें
+            fileNameDisplay.textContent = ''; // फ़ाइल नाम डिस्प्ले साफ़ करें
+            statusMessage.textContent = ''; // स्थिति संदेश साफ़ करें
+            resultArea.style.display = 'none'; // परिणाम क्षेत्र छिपाएं
+            resizeOptionsSection.style.display = 'none'; // Resize विकल्प छिपाएं
+
+
+            // केवल एक PDF फ़ाइल स्वीकार करें
+            const pdfFile = Array.from(files).find(file => file.type === 'application/pdf');
+
+            if (pdfFile) {
+                selectedFile = pdfFile;
+                fileNameDisplay.textContent = 'चुनी गई फ़ाइल: ' + selectedFile.name;
+                fileUploadLabel.style.display = 'none'; // लेबल छिपा दें
+
+                // PDF फ़ाइल चुने जाने पर Resize विकल्प दिखाएं
+                 resizeOptionsSection.style.display = 'block';
+                 statusMessage.textContent = 'अब नया पेज आकार चुनें और "PDF Resize करें" पर क्लिक करें।';
+
+
+            } else {
+                 // यदि कोई फ़ाइल चुनी गई लेकिन वह PDF नहीं है
+                 if(files.length > 0) {
+                     alert('कृपया केवल PDF फ़ाइल चुनें।');
+                 }
+                fileInput.value = ''; // इनपुट रीसेट करें
+                fileUploadLabel.style.display = 'block'; // लेबल दिखाएं
+                fileNameDisplay.textContent = '';
+                statusMessage.textContent = 'कृपया Resize करने के लिए एक PDF फ़ाइल चुनें।';
+            }
+        }
+
+        // पेज आकार चयन में बदलाव होने पर कस्टम इनपुट दिखाएं/छिपाएं
+        pageSizeSelect.addEventListener('change', function() {
+            if (pageSizeSelect.value === 'Custom') {
+                customSizeInputsDiv.style.display = 'flex'; // कस्टम इनपुट दिखाएं
+            } else {
+                customSizeInputsDiv.style.display = 'none'; // कस्टम इनपुट छिपाएं
+            }
+             // जब आकार बदलता है, तो परिणाम क्षेत्र छिपाएं
+            resultArea.style.display = 'none';
+            statusMessage.textContent = 'अब नया पेज आकार चुनें और "PDF Resize करें" पर क्लिक करें।'; // स्थिति संदेश रीसेट करें
+        });
+
+
+        // Resize बटन पर क्लिक हैंडल करें
+        resizeButton.addEventListener('click', async function() {
+            if (!selectedFile) {
+                alert('कृप्या Resize करने से पहले एक PDF फ़ाइल चुनें।');
+                return;
+            }
+
+            statusMessage.textContent = 'PDF Resize हो रहा है...';
+            resizeButton.disabled = true; // बटन को डिसेबल करें
+            resultArea.style.display = 'none'; // परिणाम क्षेत्र छिपाएं
+
+            let targetWidth, targetHeight;
+            const selectedSize = pageSizeSelect.value;
+
+            if (selectedSize === 'Custom') {
+                targetWidth = parseFloat(customWidthInput.value);
+                targetHeight = parseFloat(customHeightInput.value);
+
+                if (isNaN(targetWidth) || isNaN(targetHeight) || targetWidth <= 0 || targetHeight <= 0) {
+                    alert('कृपया कस्टम चौड़ाई और ऊंचाई के लिए मान्य संख्याएं दर्ज करें।');
+                    statusMessage.textContent = '';
+                    resizeButton.disabled = false;
+                    return;
+                }
+            } else {
+                [targetWidth, targetHeight] = pageSizes[selectedSize];
+            }
+
+            try {
+                // फ़ाइल को ArrayBuffer के रूप में पढ़ें
+                const arrayBuffer = await selectedFile.arrayBuffer();
+
+                // ArrayBuffer से मूल PDF दस्तावेज़ लोड करें
+                const originalPdf = await PDFDocument.load(arrayBuffer);
+
+                // एक नया, खाली PDF दस्तावेज़ बनाएं
+                const resizedPdf = await PDFDocument.create();
+
+                const originalPages = originalPdf.getPages();
+                for (let i = 0; i < originalPages.length; i++) {
+                    const originalPage = originalPages[i];
+                    const { width: originalWidth, height: originalHeight } = originalPage.getSize();
+
+                    statusMessage.textContent = `प्रोसेस हो रहा है पेज ${i + 1}/${originalPages.length}...`;
+
+                    // नए आकार के साथ एक नया पेज जोड़ें
+                    const newPage = resizedPdf.addPage([targetWidth, targetHeight]);
+
+                    // मूल पेज को नए दस्तावेज़ में एम्बेड करें ताकि इसकी सामग्री का उपयोग किया जा सके
+                    const embeddedPage = await resizedPdf.embedPage(originalPage);
+
+                    // सामग्री को नए पेज पर फिट करने के लिए स्केल की गणना करें (पहलू अनुपात बनाए रखें)
+                    const scaleX = targetWidth / embeddedPage.width;
+                    const scaleY = targetHeight / embeddedPage.height;
+                    const scale = Math.min(scaleX, scaleY);
+
+                    // स्केल की गई सामग्री का आकार
+                    const scaledWidth = embeddedPage.width * scale;
+                    const scaledHeight = embeddedPage.height * scale;
+
+                    // सामग्री को नए पेज पर केंद्रित करें
+                    const x = (targetWidth - scaledWidth) / 2;
+                    const y = (targetHeight - scaledHeight) / 2;
+
+
+                    // एम्बेड किए गए पेज की सामग्री को नए पेज पर ड्रा करें
+                    newPage.drawPage(embeddedPage, {
+                        x,
+                        y,
+                        width: scaledWidth,
+                        height: scaledHeight,
+                    });
+                }
+
+
+                // Resize किए गए PDF को बाइट्स के रूप में सहेजें
+                const pdfBytes = await resizedPdf.save();
+
+                // बाइट्स से एक Blob बनाएं
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+                // डाउनलोड लिंक बनाएं
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                // मूल नाम के साथ '_resized' जोड़ें
+                const originalName = selectedFile.name.split('.').slice(0, -1).join('.');
+                a.download = `${originalName}_resized.pdf`;
+                 a.textContent = 'Resize की गई PDF डाउनलोड करें';
+                 a.className = 'download-link'; // स्टाइलिंग के लिए क्लास
+
+                // परिणाम क्षेत्र में डाउनलोड लिंक दिखाएं
+                resultArea.innerHTML = ''; // पिछला कंटेंट साफ़ करें
+                resultArea.appendChild(a);
+                resultArea.style.display = 'flex'; // परिणाम क्षेत्र दिखाएं
+                resultArea.style.borderColor = '#2ecc71'; // हरे रंग का बॉर्डर
+                resultArea.style.color = '#27ae60'; // हरे रंग का टेक्स्ट
+
+                statusMessage.textContent = 'Resize पूर्ण!';
+
+                 // फ़ाइल चयन रीसेट करें (वैकल्पिक)
+                 selectedFile = null;
+                 fileInput.value = '';
+                 fileNameDisplay.textContent = '';
+                 fileUploadLabel.style.display = 'block'; // लेबल दिखाएं
+                 resizeOptionsSection.style.display = 'none'; // Resize विकल्प छिपाएं
+
+
+            } catch (error) {
+                statusMessage.textContent = 'Resize करने में त्रुटि हुई।';
+                resultArea.innerHTML = `<p style="color: red;">त्रुटि: ${error.message}</p>`;
+                resultArea.style.display = 'flex'; // परिणाम क्षेत्र दिखाएं
+                 resultArea.style.borderColor = 'red'; // लाल बॉर्डर
+                 resultArea.style.color = 'red'; // लाल टेक्स्ट
+
+                console.error('PDF Resize त्रुटि:', error);
+
+            } finally {
+                resizeButton.disabled = false; // बटन को फिर से सक्षम करें
+            }
+        });
+
+        // शुरुआत में Resize विकल्प और परिणाम क्षेत्र छिपाएं
+        resizeOptionsSection.style.display = 'none';
+        resultArea.style.display = 'none';
+
+
+    </script>
+
+</body>
+</html>
