@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF अनलॉक करें - Time Saving Tools</title>
+    <!-- हेड सेक्शन में स्टाइलिंग के लिए CSS -->
+    <style>
+        /* बेसिक स्टाइलिंग */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px; /* कंटेंट की अधिकतम चौड़ाई */
+            margin: 20px auto; /* ऊपर नीचे 20px मार्जिन, दाएं बाएं ऑटो (बीच में लाने के लिए) */
+            padding: 0 20px; /* कंटेंट के चारों ओर पैडिंग */
+        }
+
+        /* हेडर की स्टाइलिंग (पहले जैसी ही) */
+        header {
+            background-color: #fff;
+            padding: 20px 0;
+            text-align: center; /* हेडर टेक्स्ट को बीच में करें */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* हल्का शैडो */
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2.5em; /* हेडर टेक्स्ट का आकार */
+            margin: 0;
+            font-weight: bold;
+
+            /* रंगीन एनिमेटेड टेक्स्ट के लिए */
+            background: linear-gradient(270deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            background-size: 400% auto; /* ग्रेडिएंट को टेक्स्ट से ज़्यादा चौड़ा बनाएं */
+            -webkit-background-clip: text; /* बैकग्राउंड को टेक्स्ट के आकार में क्लिप करें */
+            background-clip: text; /* बैकग्राउंड को टेक्स्ट के आकार में क्लिप करें */
+            color: transparent; /* टेक्स्ट का रंग पारदर्शी करें */
+            animation: gradientAnimation 10s linear infinite; /* एनीमेशन लागू करें */
+            display: inline-block; /* 'background-clip' के सही काम करने के लिए */
+        }
+
+        /* ग्रेडिएंट एनीमेशन की परिभाषा */
+        @keyframes gradientAnimation {
+            0% { background-position: 0% center; }
+            100% { background-position: 400% center; }
+        }
+
+        /* मुख्य कंटेंट क्षेत्र की स्टाइलिंग */
+        main {
+            background-color: #fff;
+            padding: 30px; /* पैडिंग बढ़ाएं */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* हल्का शैडो */
+            border-radius: 8px; /* किनारे हल्के गोल करें */
+            text-align: center; /* मुख्य सामग्री को बीच में करें */
+        }
+
+        main h2 {
+            text-align: center;
+            color: #e67e22; /* शीर्षक का रंग (नारंगी) */
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+         main p {
+             margin-bottom: 20px;
+         }
+
+
+        .tool-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd; /* सेक्शन के चारों ओर बॉर्डर */
+            border-radius: 5px;
+            background-color: #f9f9f9; /* हल्का बैकग्राउंड रंग */
+        }
+
+        .file-upload-area {
+            border: 2px dashed #e67e22; /* डैशेड बॉर्डर (नारंगी) */
+            padding: 40px 20px; /* पैडिंग बढ़ाएं */
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #fcf3eb; /* हल्का नारंगी-ग्रे बैकग्राउंड */
+            cursor: pointer; /* माउस पॉइंटर को हाथ वाला बनाएं */
+            transition: border-color 0.3s ease, background-color 0.3s ease; /* होवर पर बदलाव के लिए एनीमेशन */
+        }
+
+        .file-upload-area:hover {
+            border-color: #d35400; /* होवर पर गहरा नारंगी */
+            background-color: #fae5cd; /* होवर पर गहरा बैकग्राउंड */
+        }
+
+         /* ड्रैग-एंड-ड्रॉप के दौरान हाईलाइट स्टाइल */
+        .file-upload-area.highlight {
+            border-color: #d35400;
+            background-color: #f8e9da; /* हल्का नारंगी बैकग्राउंड */
+        }
+
+         .file-upload-area .upload-icon {
+             font-size: 3em; /* आइकन का आकार */
+             color: #e67e22; /* आइकन का रंग */
+             margin-bottom: 10px;
+         }
+
+
+        .file-upload-area input[type="file"] {
+            display: none; /* डिफ़ॉल्ट फ़ाइल इनपुट को छिपा दें */
+        }
+
+         .file-upload-area label {
+            display: block; /* लेबल को ब्लॉक तत्व बनाएं */
+            cursor: pointer; /* लेबल पर भी हाथ वाला पॉइंटर दिखे */
+            font-size: 1.2em; /* लेबल फ़ॉन्ट आकार */
+            font-weight: bold;
+            color: #34495e; /* लेबल टेक्स्ट का रंग */
+         }
+
+         .file-upload-area p {
+             margin-top: 10px;
+             font-size: 0.9em;
+             color: #7f8c8d;
+         }
+
+         #file-name {
+             margin-top: 15px;
+             font-size: 1.1em;
+             font-weight: bold;
+             color: #2c3e50; /* गहरा नीला रंग */
+             min-height: 1.3em; /* नाम न होने पर भी स्पेस बनाए रखने के लिए */
+         }
+
+        .password-section {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            text-align: left; /* टेक्स्ट को बाएं संरेखित करें */
+        }
+
+        .password-section label {
+            display: block; /* लेबल को ब्लॉक बनाएं */
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        .password-section input[type="password"] {
+            width: calc(100% - 22px); /* पैडिंग और बॉर्डर के लिए जगह छोड़ें */
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+
+        .unlock-button-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .unlock-button {
+            display: inline-block; /* बटन को सामग्री के अनुसार चौड़ाई दें */
+            padding: 15px 30px; /* पैडिंग */
+            background-color: #e74c3c; /* लाल रंग */
+            color: white; /* टेक्स्ट का रंग */
+            text-align: center;
+            border: none; /* बॉर्डर नहीं */
+            border-radius: 5px; /* किनारे गोल */
+            cursor: pointer;
+            font-size: 1.2em; /* फ़ॉन्ट आकार */
+            font-weight: bold;
+            transition: background-color 0.3s ease; /* होवर एनीमेशन */
+            margin-top: 20px;
+        }
+
+        .unlock-button:hover {
+            background-color: #c0392b; /* होवर पर गहरा लाल */
+        }
+
+         #status-message {
+             margin-top: 15px;
+             font-weight: bold;
+             color: #555;
+             min-height: 1.5em; /* मैसेज न होने पर भी स्पेस बनाए रखने के लिए */
+         }
+
+
+        .result-area {
+            margin-top: 30px;
+            padding: 30px;
+            border: 2px dashed #2ecc71; /* हरा डैशेड बॉर्डर */
+            border-radius: 5px;
+            min-height: 80px; /* न्यूनतम ऊंचाई */
+            background-color: #ecf0f1; /* हल्का नीला-ग्रे बैकग्राउंड */
+            text-align: center;
+            color: #27ae60; /* टेक्स्ट का रंग */
+            font-style: italic; /* टेक्स्ट को इटैलिक करें */
+            display: flex; /* फ्लेक्सबॉक्स लेआउट */
+            justify-content: center; /* क्षैतिज रूप से बीच में करें */
+            align-items: center; /* लंबवत रूप से बीच में करें */
+            display: none; /* शुरुआत में छिपा हुआ */
+        }
+
+        .result-area p {
+             margin: 0; /* डिफ़ॉल्ट पैराग्राफ मार्gin हटा दें */
+        }
+
+        .result-area a {
+             color: #27ae60; /* लिंक का रंग */
+             text-decoration: none; /* अंडरलाइन हटा दें */
+             font-weight: bold;
+        }
+
+         .result-area a:hover {
+             text-decoration: underline; /* होवर पर अंडरलाइन करें */
+         }
+
+
+        /* फुटर की स्टाइलिंग */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 20px;
+            color: #777;
+            font-size: 0.9em; /* फ़ॉन्ट आकार */
+        }
+
+         /* छोटी स्क्रीन के लिए मीडिया क्वेरी */
+         @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8em; /* छोटी स्क्रीन पर फ़ॉन्ट छोटा करें */
+            }
+             .file-upload-area {
+                 padding: 30px 10px; /* पैडिंग कम करें */
+             }
+             .file-upload-area label {
+                 font-size: 1em; /* फ़ॉन्ट आकार कम करें */
+             }
+              .unlock-button {
+                padding: 12px 20px; /* पैडिंग कम करें */
+                font-size: 1em; /* फ़ॉन्ट आकार कम करें */
+             }
+             .password-section input[type="password"] {
+                 width: calc(100% - 20px); /* छोटी स्क्रीन के लिए एडजस्ट करें */
+             }
+         }
+
+    </style>
+</head>
+<body>
+
+    <!-- हेडर सेक्शन -->
+    <header>
+        <!-- वेबसाइट का नाम - रंगीन और एनिमेटेड -->
+        <h1>Time Saving Tools</h1>
+    </header>
+
+    <!-- मुख्य कंटेंट के लिए कंटेनर -->
+    <div class="container">
+        <main>
+            <!-- पेज का मुख्य शीर्षक -->
+            <h2>PDF अनलॉक करें</h2>
+
+            <p>पासवर्ड-संरक्षित PDF फ़ाइलों से सुरक्षा हटाएं।</p>
+             <p><small><strong>कृपया ध्यान दें:</strong> यह केवल इंटरफ़ेस है। वास्तविक अनलॉकिंग (विशेषकर मजबूत पासवर्ड के लिए) के लिए बैकएंड (सर्वर-साइड कोड) या एक एडवांस्ड API की आवश्यकता होगी जो इस उदाहरण में शामिल नहीं है। यदि PDF में केवल "मालिक" पासवर्ड है (जो संपादन जैसी अनुमतियों को प्रतिबंधित करता है) और सामग्री एन्क्रिप्टेड नहीं है, तो कुछ PDF रीडर बिना पासवर्ड के भी कंटेंट दिखा सकते हैं, लेकिन वास्तविक "उपयोगकर्ता" पासवर्ड को हटाने के लिए प्रोसेसिंग की आवश्यकता होती है।</small></p>
+
+
+            <!-- फ़ाइल अपलोड सेक्शन -->
+            <div class="tool-section">
+                <h3>अपनी PDF फ़ाइल चुनें</h3>
+
+                <div class="file-upload-area" id="drop-area">
+                    <!-- हिडन फ़ाइल इनपुट। लेबल पर क्लिक करने से यह सक्रिय होगा। -->
+                    <input type="file" accept=".pdf" id="pdfFile" />
+                    <!-- लेबल जो क्लिक करने योग्य क्षेत्र के रूप में काम करेगा -->
+                    <label for="pdfFile">अपनी PDF फ़ाइल चुनें या यहां ड्रैग और ड्रॉप करें</label>
+                    <p>केवल .pdf फ़ाइलें स्वीकार की जाती हैं।</p>
+                    <!-- चुनी गई फ़ाइल का नाम दिखाने के लिए -->
+                    <p id="file-name"></p>
+                </div>
+
+            </div>
+
+             <!-- पासवर्ड इनपुट सेक्शन (यदि आवश्यक हो) -->
+             <div class="password-section" id="password-section" style="display: none;">
+                 <label for="pdfPassword">PDF पासवर्ड दर्ज करें (यदि आवश्यक हो):</label>
+                 <input type="password" id="pdfPassword" placeholder="पासवर्ड डालें" />
+                 <p><small>यदि PDF फ़ाइल में उपयोगकर्ता पासवर्ड है, तो उसे यहां दर्ज करें।</small></p>
+             </div>
+
+
+            <!-- अनलॉक बटन सेक्शन -->
+            <div class="unlock-button-section">
+                 <!-- बटन पर क्लिक करने पर JavaScript फ़ंक्शन कॉल करें -->
+                <button class="unlock-button" id="unlockBtn">PDF अनलॉक करें</button>
+                 <p id="status-message"></p> <!-- स्थिति संदेश दिखाने के लिए -->
+            </div>
+
+            <!-- परिणाम क्षेत्र -->
+             <div class="result-area" id="result-area">
+                 <!-- अनलॉक की गई फ़ाइल का डाउनलोड लिंक यहां दिखेगा -->
+             </div>
+
+        </main>
+    </div>
+
+    <!-- फुटर सेक्शन -->
+    <footer>
+        <p>© 2023 Time Saving Tools. All rights reserved.</p>
+    </footer>
+
+    <!-- फ़ाइल हैंडलिंग और डेमो रूपांतरण के लिए JavaScript -->
+    <script>
+        // HTML तत्वों का संदर्भ प्राप्त करें
+        const fileInput = document.getElementById('pdfFile');
+        const fileNameDisplay = document.getElementById('file-name');
+        const fileUploadLabel = document.querySelector('.file-upload-area label');
+        const dropArea = document.getElementById('drop-area');
+        const passwordSection = document.getElementById('password-section');
+        const pdfPasswordInput = document.getElementById('pdfPassword');
+        const unlockButton = document.getElementById('unlockBtn');
+        const statusMessage = document.getElementById('status-message');
+        const resultArea = document.getElementById('result-area');
+
+        let selectedFile = null; // चुनी गई फ़ाइल को स्टोर करने के लिए
+
+        // फ़ाइल इनपुट में बदलाव होने पर फ़ाइल को हैंडल करें
+        fileInput.addEventListener('change', function() {
+            handleFiles(fileInput.files);
+        });
+
+        // ड्रैग और ड्रॉप कार्यक्षमता
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // ड्रैग करते समय हाईलाइट करें
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
+        });
+
+        // ड्रैग खत्म होने या ड्रॉप होने पर हाईलाइट हटा दें
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+        });
+
+        // फ़ाइल ड्रॉप होने पर हैंडल करें
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        // फ़ाइलों को प्रोसेस करें (चाहे इनपुट से चुनें या ड्रॉप करें)
+        function handleFiles(files) {
+            selectedFile = null; // पिछली फ़ाइल को साफ़ करें
+            fileNameDisplay.textContent = ''; // फ़ाइल नाम डिस्प्ले साफ़ करें
+            statusMessage.textContent = ''; // स्थिति संदेश साफ़ करें
+            resultArea.style.display = 'none'; // परिणाम क्षेत्र छिपाएं
+            passwordSection.style.display = 'none'; // पासवर्ड सेक्शन छिपाएं
+            pdfPasswordInput.value = ''; // पासवर्ड इनपुट साफ़ करें
+
+
+            // केवल एक PDF फ़ाइल स्वीकार करें
+            const pdfFile = Array.from(files).find(file => file.type === 'application/pdf');
+
+            if (pdfFile) {
+                selectedFile = pdfFile;
+                fileNameDisplay.textContent = 'चुनी गई फ़ाइल: ' + selectedFile.name;
+                fileUploadLabel.style.display = 'none'; // लेबल छिपा दें
+
+                // PDF फ़ाइल चुने जाने पर पासवर्ड सेक्शन दिखाएं
+                 passwordSection.style.display = 'block';
+                 statusMessage.textContent = 'अब पासवर्ड दर्ज करें (यदि आवश्यक हो) और अनलॉक बटन पर क्लिक करें।';
+
+
+            } else {
+                fileInput.value = ''; // अमान्य फ़ाइल हटाने के लिए इनपुट रीसेट करें
+                fileUploadLabel.style.display = 'block'; // लेबल दिखाएं
+                statusMessage.textContent = 'कृपया एक मान्य PDF फ़ाइल चुनें।';
+            }
+        }
+
+
+        // अनलॉक बटन पर क्लिक हैंडल करें
+        unlockButton.addEventListener('click', function() {
+            if (!selectedFile) {
+                alert('कृपया अनलॉक करने से पहले एक PDF फ़ाइल चुनें।');
+                return;
+            }
+
+            const password = pdfPasswordInput.value;
+            // आप यहां पासवर्ड की आवश्यकता की जांच कर सकते हैं, हालांकि सभी PDF को पासवर्ड की आवश्यकता नहीं होती है
+            // if (!password) { alert('कृपया पासवर्ड दर्ज करें।'); return; } // यदि आप पासवर्ड अनिवार्य करना चाहते हैं
+
+
+            statusMessage.textContent = 'अनलॉकिंग प्रक्रिया शुरू हो रही है...';
+            unlockButton.disabled = true; // बटन को डिसेबल करें
+            resultArea.style.display = 'none'; // परिणाम क्षेत्र छिपाएं
+
+            // ====== यहां वास्तविक PDF अनलॉकिंग लॉजिक आएगा ======
+            // महत्वपूर्ण: निम्नलिखित केवल एक सिमुलेशन है!
+            // वास्तविक अनलॉकिंग के लिए आपको सर्वर-साइड कोड (जैसे Python, Node.js + एक PDF लाइब्रेरी)
+            // या एक क्लाउड-आधारित PDF API का उपयोग करना होगा।
+            // ब्राउज़र-साइड JavaScript में मजबूत PDF एन्क्रिप्शन को हटाना बहुत कठिन और अविश्वसनीय है।
+            // ====================================================
+
+            console.log('अनलॉक बटन क्लिक किया गया। फ़ाइल:', selectedFile.name, 'पासवर्ड (यदि दर्ज किया गया):', password);
+
+            // डेमो के लिए कुछ सेकंड बाद परिणाम अपडेट करें
+            setTimeout(() => {
+                // यहां हम मान रहे हैं कि अनलॉकिंग "सफल" हुई (सिर्फ डेमो के लिए)
+                statusMessage.textContent = 'अनलॉकिंग (सिमुलेटेड) पूर्ण!';
+                resultArea.innerHTML = '<p>डेमो: PDF सफलतापूर्वक अनलॉक किया गया। (<a href="#" onclick="alert(\'यह एक नकली डाउनलोड लिंक है!\'); return false;">अनलॉक की गई फ़ाइल डाउनलोड करें</a>)</p>';
+                resultArea.style.display = 'flex'; // परिणाम क्षेत्र दिखाएं
+                resultArea.style.borderColor = '#2ecc71'; // हरे रंग का बॉर्डर
+                resultArea.style.color = '#27ae60'; // हरे रंग का टेक्स्ट
+
+                // फ़ाइल चयन और पासवर्ड इनपुट रीसेट करें (वैकल्पिक)
+                 selectedFile = null;
+                 fileInput.value = '';
+                 fileNameDisplay.textContent = '';
+                 fileUploadLabel.style.display = 'block';
+                 passwordSection.style.display = 'none';
+                 pdfPasswordInput.value = '';
+
+
+            }, 3000); // 3 सेकंड बाद सिमुलेटेड परिणाम दिखाएं
+
+             // नोट: यदि वास्तविक अनलॉकिंग असफल होती, तो आप statusMessage और resultArea में
+             // तदनुसार एक त्रुटि संदेश दिखाते।
+
+            unlockButton.disabled = false; // बटन को फिर से सक्षम करें (या यदि आप प्रोसेसिंग को रोकते हैं तो त्रुटि हैंडलर में करें)
+
+        });
+
+        // शुरुआत में पासवर्ड सेक्शन और रिजल्ट एरिया छिपाएं
+         passwordSection.style.display = 'none';
+         resultArea.style.display = 'none';
+
+
+    </script>
+
+</body>
+</html>
