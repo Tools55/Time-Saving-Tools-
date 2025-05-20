@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Photo Enhancer - Time Saving Tools</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif; background-color: #333; color: #f4f4f4;
+            margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh;
+        }
+        .tool-container {
+            width: 95%; max-width: 1000px; /* Wider for controls and preview */
+            margin: 20px auto; padding: 25px; background-color: #444;
+            border-radius: 10px; box-shadow: 0 6px 18px rgba(0,0,0,0.55); flex-grow: 1;
+        }
+        .tool-header {
+            background: #222; color: #fff; padding: 1rem 0; border-bottom: 3px solid #FFD700;
+            text-align: center; margin-bottom: 20px;
+        }
+        .tool-header h1 a { color: #FFD700; text-decoration: none; font-size: 1.8em; }
+        .tool-header .breadcrumb { margin-top: 5px; font-size: 0.9em; }
+        .tool-header .breadcrumb a { color: #ccc; text-decoration: none; }
+        .tool-header .breadcrumb a:hover { color: #FFD700; }
+
+        .tool-container h2 { color: #FFD700; text-align: center; margin-bottom: 1.5rem; font-size: 1.8em; }
+        .main-layout {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping for controls and preview */
+            gap: 20px;
+        }
+        .controls-panel {
+            flex: 1; /* Takes up available space */
+            min-width: 300px; /* Minimum width for controls */
+            background-color: #3a3a3a;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .controls-panel h4 { margin-top:0; color: #FFD700; }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #f0f0f0; font-size: 0.95em;}
+        input[type="file"] {
+            width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #555;
+            background-color: #404040; color: #f4f4f4; font-size: 0.9em; box-sizing: border-box;
+        }
+        input[type="range"] {
+            width: calc(100% - 50px); /* Adjust width for value display */
+            margin-right: 10px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        .slider-value { font-weight: bold; color: #FFD700; min-width:35px; display:inline-block; text-align:right; }
+
+        .filter-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top:15px; }
+        .filter-buttons button {
+            background-color: #555; color: #f0f0f0; border: 1px solid #666;
+            padding: 8px 12px; font-size: 0.9em; border-radius: 4px; cursor: pointer;
+            transition: background-color 0.3s ease; flex-grow:1;
+        }
+        .filter-buttons button:hover { background-color: #FFD700; color:#333; }
+        .filter-buttons button:disabled { background-color: #404040; color:#888; cursor: not-allowed; }
+
+
+        .preview-panel {
+            flex: 2; /* Takes up more space for the image */
+            min-width: 400px; /* Minimum width for image preview */
+            text-align: center;
+        }
+        #outputCanvas {
+            max-width: 100%;
+            height: auto;
+            max-height: 500px; /* Limit canvas display height */
+            border: 2px solid #555;
+            border-radius: 5px;
+            background-color: #2c2c2c; /* Dark background for canvas */
+        }
+        .image-info {font-size: 0.85em; color: #ccc; margin-top:10px;}
+        
+        .action-buttons { text-align:center; margin-top: 20px; }
+        .action-buttons button {
+            background-color: #FFD700; color: #333; border: none; padding: 0.8rem 1.5rem;
+            font-size: 1em; font-weight: bold; border-radius: 5px; cursor: pointer;
+            transition: background-color 0.3s ease; margin: 5px;
+        }
+        .action-buttons button:disabled { background-color: #555; color:#888; }
+
+
+        #loadingIndicator { display: none; text-align: center; margin:15px 0; color: #FFD700; }
+        .status-message { text-align: center; margin-top: 1rem; padding: 10px; border-radius: 4px; font-size: 0.9em; display:none;}
+        .status-message.error { background-color: #D32F2F; color: white; }
+        .status-message.info { background-color: #1976D2; color: white; }
+        
+        .tool-footer { background: #222; color: #ccc; text-align: center; padding: 1rem 0; font-size: 0.9em; border-top: 2px solid #FFD700; margin-top: auto;}
+    </style>
+</head>
+<body>
+    <header class="tool-header">
+        <h1><a href="../index.html">Time Saving Tools</a></h1>
+        <div class="breadcrumb">
+            <a href="../index.html">Home</a> > <a href="../index.html#image-tools-section">Image Tools</a> > <span>Basic Photo Enhancer</span>
+        </div>
+    </header>
+
+    <div class="tool-container">
+        <h2><i class="fas fa-edit"></i> Basic Photo Enhancer</h2>
+        <p style="text-align:center; font-size:0.9em; color:#ccc; margin-bottom:1.5rem;">
+            इमेज अपलोड करें और विभिन्न समायोजनों का उपयोग करके उसे बेहतर बनाएं। यह क्लाइंट-साइड टूल है।
+        </p>
+        
+        <div class="main-layout">
+            <div class="controls-panel">
+                <h4><i class="fas fa-upload"></i> 1. इमेज चुनें</h4>
+                <div class="form-group">
+                    <input type="file" id="imageUpload" accept="image/png, image/jpeg, image/webp">
+                </div>
+
+                <h4 style="margin-top: 20px;"><i class="fas fa-sliders-h"></i> 2. समायोजन (Adjustments)</h4>
+                <div class="form-group">
+                    <label for="brightnessSlider">ब्राइटनेस: <span class="slider-value" id="brightnessValue">0</span></label>
+                    <input type="range" id="brightnessSlider" min="-100" max="100" value="0" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="contrastSlider">कंट्रास्ट: <span class="slider-value" id="contrastValue">0</span></label>
+                    <input type="range" id="contrastSlider" min="-100" max="100" value="0" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="saturationSlider">सैचुरेशन: <span class="slider-value" id="saturationValue">0</span></label>
+                    <input type="range" id="saturationSlider" min="-100" max="100" value="0" disabled>
+                </div>
+                <!-- Sharpen uses a button due to complexity of live update -->
+
+                <h4 style="margin-top: 20px;"><i class="fas fa-magic"></i> 3. फिल्टर्स</h4>
+                 <div class="filter-buttons">
+                    <button id="sharpenBtn" disabled>शार्प करें</button>
+                    <button id="grayscaleBtn" disabled>ग्रेस्केल</button>
+                    <button id="invertBtn" disabled>इनवर्ट</button>
+                 </div>
+
+                <div class="action-buttons" style="margin-top:30px;">
+                    <button id="resetBtn" disabled><i class="fas fa-undo"></i> रीसेट करें</button>
+                </div>
+            </div>
+
+            <div class="preview-panel">
+                 <h4 style="color:#FFD700;">प्रीव्यू</h4>
+                <canvas id="outputCanvas"></canvas>
+                <div id="loadingIndicator"><i class="fas fa-spinner fa-spin"></i> प्रोसेस हो रहा है...</div>
+                <div class="image-info" id="imageInfo">कोई इमेज लोड नहीं है।</div>
+                <div class="action-buttons">
+                    <button id="downloadBtn" disabled><i class="fas fa-download"></i> एन्हांस्ड इमेज डाउनलोड करें</button>
+                </div>
+            </div>
+        </div>
+         <div id="statusMessage" class="status-message"></div>
+    </div>
+
+    <footer class="tool-footer">
+        <p>© <span id="currentYearFooter"></span> <a href="../index.html">Time Saving Tools</a>. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById('currentYearFooter').textContent = new Date().getFullYear();
+
+        const imageUpload = document.getElementById('imageUpload');
+        const outputCanvas = document.getElementById('outputCanvas');
+        const ctx = outputCanvas.getContext('2d');
+
+        const brightnessSlider = document.getElementById('brightnessSlider');
+        const brightnessValue = document.getElementById('brightnessValue');
+        const contrastSlider = document.getElementById('contrastSlider');
+        const contrastValue = document.getElementById('contrastValue');
+        const saturationSlider = document.getElementById('saturationSlider');
+        const saturationValue = document.getElementById('saturationValue');
+
+        const sharpenBtn = document.getElementById('sharpenBtn');
+        const grayscaleBtn = document.getElementById('grayscaleBtn');
+        const invertBtn = document.getElementById('invertBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const statusMessageDiv = document.getElementById('statusMessage');
+        const imageInfoDiv = document.getElementById('imageInfo');
+
+        let originalImage = null; // Will hold the HTMLImageElement
+        let originalImageData = null; // To reset
+        let currentImageData = null; // For applying filters progressively
+        let uploadedFileName = 'enhanced_image.png';
+
+        const controls = [brightnessSlider, contrastSlider, saturationSlider, sharpenBtn, grayscaleBtn, invertBtn, resetBtn, downloadBtn];
+
+        function setControlsDisabled(disabled) {
+            controls.forEach(control => control.disabled = disabled);
+        }
+        setControlsDisabled(true); // Initially disable all controls
+
+        imageUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                uploadedFileName = file.name.replace(/\.[^/.]+$/, "") + "_enhanced.png";
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    originalImage = new Image();
+                    originalImage.onload = () => {
+                        outputCanvas.width = originalImage.width;
+                        outputCanvas.height = originalImage.height;
+                        ctx.drawImage(originalImage, 0, 0);
+                        originalImageData = ctx.getImageData(0, 0, outputCanvas.width, outputCanvas.height);
+                        currentImageData = ctx.getImageData(0, 0, outputCanvas.width, outputCanvas.height);
+                        resetAdjustments(); // Reset slider values
+                        setControlsDisabled(false);
+                        imageInfoDiv.textContent = `लोड हुई: ${originalImage.width}x${originalImage.height}`;
+                        showStatus('इमेज लोड हो गई। अब आप समायोजन कर सकते हैं।', 'info');
+                    }
+                    originalImage.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function applyFilters() {
+            if (!originalImageData) return;
+            loadingIndicator.style.display = 'block';
+            
+            // Create a worker or use setTimeout to avoid freezing UI on heavy filters
+            setTimeout(() => {
+                // Start with a fresh copy of original image data to apply all filters
+                let tempImageData = new ImageData(
+                    new Uint8ClampedArray(originalImageData.data),
+                    originalImageData.width,
+                    originalImageData.height
+                );
+                let data = tempImageData.data;
+
+                const brightness = parseInt(brightnessSlider.value);
+                const contrast = parseInt(contrastSlider.value);
+                const saturation = parseInt(saturationSlider.value);
+
+                // Apply Brightness, Contrast, Saturation
+                for (let i = 0; i < data.length; i += 4) {
+                    let r = data[i];
+                    let g = data[i+1];
+                    let b = data[i+2];
+
+                    // Brightness
+                    r = Math.min(255, Math.max(0, r + brightness));
+                    g = Math.min(255, Math.max(0, g + brightness));
+                    b = Math.min(255, Math.max(0, b + brightness));
+
+                    // Contrast
+                    // Formula: factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+                    // pixel = factor * (pixel - 128) + 128;
+                    const factorC = (259 * (contrast + 255)) / (255 * (259 - contrast));
+                    r = Math.min(255, Math.max(0, factorC * (r - 128) + 128));
+                    g = Math.min(255, Math.max(0, factorC * (g - 128) + 128));
+                    b = Math.min(255, Math.max(0, factorC * (b - 128) + 128));
+                    
+                    // Saturation (simplified approach)
+                    // For more accurate HSL/HSV based saturation, libraries are better
+                    if (saturation !== 0) {
+                        const gray = 0.299 * r + 0.587 * g + 0.114 * b; // weighted grayscale
+                        const satFactor = 1 + saturation / 100;
+                        r = Math.min(255, Math.max(0, gray + satFactor * (r - gray)));
+                        g = Math.min(255, Math.max(0, gray + satFactor * (g - gray)));
+                        b = Math.min(255, Math.max(0, gray + satFactor * (b - gray)));
+                    }
+                    
+                    data[i] = r;
+                    data[i+1] = g;
+                    data[i+2] = b;
+                }
+                currentImageData = tempImageData; // Store result for other filters to build upon
+                ctx.putImageData(currentImageData, 0, 0);
+                loadingIndicator.style.display = 'none';
+            }, 10); // Small delay to allow UI update
+        }
+        
+        // Helper for convolution matrix (sharpen)
+        function applyConvolution(srcImageData, kernel) {
+            const srcData = srcImageData.data;
+            const width = srcImageData.width;
+            const height = srcImageData.height;
+            const side = Math.round(Math.sqrt(kernel.length));
+            const halfSide = Math.floor(side / 2);
+            const destData = new Uint8ClampedArray(srcData.length);
+
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    let r = 0, g = 0, b = 0, a = 0;
+                    const dstOff = (y * width + x) * 4;
+
+                    for (let cy = 0; cy < side; cy++) {
+                        for (let cx = 0; cx < side; cx++) {
+                            const scy = Math.min(height - 1, Math.max(0, y + cy - halfSide));
+                            const scx = Math.min(width - 1, Math.max(0, x + cx - halfSide));
+                            const srcOff = (scy * width + scx) * 4;
+                            const wt = kernel[cy * side + cx];
+                            r += srcData[srcOff] * wt;
+                            g += srcData[srcOff + 1] * wt;
+                            b += srcData[srcOff + 2] * wt;
+                            // Alpha is usually kept or handled separately
+                        }
+                    }
+                    destData[dstOff] = Math.min(255, Math.max(0, r));
+                    destData[dstOff + 1] = Math.min(255, Math.max(0, g));
+                    destData[dstOff + 2] = Math.min(255, Math.max(0, b));
+                    destData[dstOff + 3] = srcData[dstOff + 3]; // Keep original alpha
+                }
+            }
+            return new ImageData(destData, width, height);
+        }
+
+
+        // Sliders event listeners
+        brightnessSlider.addEventListener('input', () => { brightnessValue.textContent = brightnessSlider.value; applyFilters(); });
+        contrastSlider.addEventListener('input', () => { contrastValue.textContent = contrastSlider.value; applyFilters(); });
+        saturationSlider.addEventListener('input', () => { saturationValue.textContent = saturationSlider.value; applyFilters(); });
+        
+        // Filter buttons event listeners
+        sharpenBtn.addEventListener('click', () => {
+            if (!currentImageData) return;
+            loadingIndicator.style.display = 'block';
+            setTimeout(() => {
+                // Sharpen kernel
+                const kernel = [
+                    0, -1,  0,
+                   -1,  5, -1,
+                    0, -1,  0
+                ];
+                currentImageData = applyConvolution(currentImageData, kernel);
+                ctx.putImageData(currentImageData, 0, 0);
+                loadingIndicator.style.display = 'none';
+                showStatus('शार्पनेस फ़िल्टर लगाया गया।', 'info');
+            }, 10);
+        });
+
+        grayscaleBtn.addEventListener('click', () => {
+            if (!currentImageData) return;
+            loadingIndicator.style.display = 'block';
+            setTimeout(() => {
+                const data = currentImageData.data;
+                for (let i = 0; i < data.length; i += 4) {
+                    const gray = data[i] * 0.299 + data[i+1] * 0.587 + data[i+2] * 0.114;
+                    data[i] = data[i+1] = data[i+2] = gray;
+                }
+                ctx.putImageData(currentImageData, 0, 0);
+                loadingIndicator.style.display = 'none';
+                showStatus('ग्रेस्केल फ़िल्टर लगाया गया।', 'info');
+            }, 10);
+        });
+
+        invertBtn.addEventListener('click', () => {
+             if (!currentImageData) return;
+            loadingIndicator.style.display = 'block';
+            setTimeout(() => {
+                const data = currentImageData.data;
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i] = 255 - data[i];         // R
+                    data[i+1] = 255 - data[i+1]; // G
+                    data[i+2] = 255 - data[i+2]; // B
+                }
+                ctx.putImageData(currentImageData, 0, 0);
+                loadingIndicator.style.display = 'none';
+                showStatus('इनवर्ट फ़िल्टर लगाया गया।', 'info');
+            }, 10);
+        });
+
+        resetBtn.addEventListener('click', () => {
+            if (originalImage) {
+                ctx.drawImage(originalImage, 0, 0);
+                originalImageData = ctx.getImageData(0, 0, outputCanvas.width, outputCanvas.height); // Re-capture
+                currentImageData = ctx.getImageData(0, 0, outputCanvas.width, outputCanvas.height); // Re-capture
+                resetAdjustments();
+                applyFilters(); // Apply default slider values (0) to redraw original
+                showStatus('सभी समायोजन रीसेट कर दिए गए हैं।', 'info');
+            }
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            if (!originalImage) {
+                showStatus('पहले एक इमेज लोड करें।', 'error');
+                return;
+            }
+            const dataURL = outputCanvas.toDataURL('image/png'); // Always save as PNG
+            const link = document.createElement('a');
+            link.href = dataURL;
+            link.download = uploadedFileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showStatus('इमेज डाउनलोड हो रही है...', 'info');
+        });
+        
+        function resetAdjustments() {
+            brightnessSlider.value = 0; brightnessValue.textContent = '0';
+            contrastSlider.value = 0;   contrastValue.textContent = '0';
+            saturationSlider.value = 0; saturationValue.textContent = '0';
+        }
+        function showStatus(message, type = 'info') {
+            statusMessageDiv.textContent = message;
+            statusMessageDiv.className = 'status-message ' + type;
+            statusMessageDiv.style.display = 'block';
+             setTimeout(() => { statusMessageDiv.style.display = 'none';}, 3000); // Hide after 3 seconds
+        }
+
+    </script>
+</body>
+</html>
