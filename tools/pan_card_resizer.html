@@ -2,88 +2,66 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>PAN Card Image Resizer</title>
   <style>
-    /* Global Styles */
     body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(to right, #f9e79f, #d6ccc2);
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
+      background: linear-gradient(to bottom, #cccccc, #f9e79f);
+      color: black;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      color: #333;
     }
 
     .container {
-      text-align: center;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       max-width: 500px;
       width: 90%;
-      padding: 30px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
     }
 
     h1 {
-      font-size: 24px;
+      font-size: 20px;
       margin-bottom: 20px;
-      color: #333;
     }
 
-    input[type="file"] {
-      margin-bottom: 15px;
-      padding: 8px 10px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      cursor: pointer;
+    input[type="file"],
+    input[type="range"] {
+      margin: 10px auto;
+      display: block;
     }
 
     label {
-      display: block;
       font-size: 16px;
-      margin-top: 10px;
-    }
-
-    input[type="range"] {
-      width: 100%;
-      margin: 10px auto;
-    }
-
-    span#qValue {
-      font-weight: bold;
-      color: #007BFF;
     }
 
     img {
-      max-width: 100%; /* Ensure image fits within container */
-      margin: 20px auto; /* Center the image horizontally */
+      max-width: 100%;
+      margin-top: 20px;
       border: 2px solid #ccc;
       border-radius: 5px;
     }
 
     a {
       display: inline-block;
-      margin-top: 20px;
+      margin-top: 15px;
       padding: 10px 20px;
       background: #007BFF;
       color: white;
       text-decoration: none;
       border-radius: 6px;
       font-weight: bold;
-      transition: background 0.3s ease;
     }
 
     a:hover {
       background: #0056b3;
-    }
-
-    .hidden {
-      display: none;
     }
 
     .spinner {
@@ -101,16 +79,17 @@
       100% { transform: rotate(360deg); }
     }
 
-    .success-message {
-      color: green;
-      font-weight: bold;
-      margin-top: 10px;
+    .hidden {
+      display: none;
     }
 
-    .error-message {
-      color: red;
-      font-weight: bold;
+    .size-info {
       margin-top: 10px;
+      font-size: 14px;
+    }
+
+    canvas {
+      display: none;
     }
   </style>
 </head>
@@ -126,16 +105,13 @@
   <label for="quality">Compression Level: <span id="qValue">70%</span></label>
   <input type="range" id="quality" min="10" max="100" value="70" step="5" />
 
-  <canvas id="canvas" style="display:none;"></canvas>
-
+  <canvas id="canvas"></canvas>
   <div class="spinner hidden" id="spinner"></div>
-
-  <div class="success-message hidden" id="successMessage">✅ Image Ready! डाउनलोड कर सकते हैं।</div>
-  <div class="error-message hidden" id="errorMessage">⚠️ File size > 30KB. Compression बढ़ाएँ।</div>
 
   <img id="preview" src="" alt="Preview" class="hidden" />
 
-  <br />
+  <div class="size-info" id="sizeInfo"></div>
+
   <a id="download" class="hidden" download="pan_image.jpg">डाउनलोड Resized Image</a>
 
 </div>
@@ -144,12 +120,13 @@
   const upload = document.getElementById('upload');
   const canvas = document.getElementById('canvas');
   const preview = document.getElementById('preview');
-  const downloadLink = document.getElementById('download');
   const spinner = document.getElementById('spinner');
-  const successMessage = document.getElementById('successMessage');
-  const errorMessage = document.getElementById('errorMessage');
+  const sizeInfo = document.getElementById('sizeInfo');
+  const downloadLink = document.getElementById('download');
   const qualitySlider = document.getElementById('quality');
   const qValue = document.getElementById('qValue');
+
+  let originalSizeKB = 0;
 
   // Update compression level label
   qualitySlider.addEventListener('input', () => {
@@ -160,54 +137,144 @@
     const file = this.files[0];
     if (!file) return;
 
+    // Show loading
     spinner.classList.remove('hidden');
-    successMessage.classList.add('hidden');
-    errorMessage.classList.add('hidden');
     preview.classList.add('hidden');
     downloadLink.classList.add('hidden');
+    sizeInfo.textContent = "";
+
+    // Read original size
+    originalSizeKB = file.size / 1024;
 
     const reader = new FileReader();
     reader.onload = function (e) {
       const img = new Image();
       img.onload = function () {
-        const ctx = canvas.getContext('2d');
-        canvas.width = 213;
-        canvas.height = 213;
+        // Open cropping dialog
+        const cropWindow = window.open('', '_blank', 'width=600,height=500');
+        cropWindow.document.write(`
+          <html>
+            <head><title>Crop Image</title></head>
+            <body style="margin:0;padding:0;">
+              <img id="cropImg" src="${e.target.result}" style="max-width:100%;display:block;margin:auto;" />
+              <p style="text-align:center;">Drag and select the area you want to keep.</p>
+              <script>
+                const img = document.getElementById("cropImg");
+                let startX = 0, startY = 0, endX = 0, endY = 0, isSelecting = false;
+                let rect = null;
 
-        // White background
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                img.addEventListener('mousedown', (e) => {
+                  isSelecting = true;
+                  const offset = img.getBoundingClientRect();
+                  startX = e.clientX - offset.left;
+                  startY = e.clientY - offset.top;
+                });
 
-        // Centered resize
-        const scale = Math.min(213 / img.width, 213 / img.height);
-        const x = (213 - img.width * scale) / 2;
-        const y = (213 - img.height * scale) / 2;
-        ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+                img.addEventListener('mousemove', (e) => {
+                  if (!isSelecting) return;
+                  const offset = img.getBoundingClientRect();
+                  endX = e.clientX - offset.left;
+                  endY = e.clientY - offset.top;
 
-        // Convert to JPEG with selected quality
-        const quality = parseInt(qualitySlider.value) / 100;
+                  if (!rect) {
+                    rect = document.createElement('div');
+                    rect.style.position = 'absolute';
+                    rect.style.border = '2px dashed red';
+                    img.parentNode.appendChild(rect);
+                  }
 
-        canvas.toBlob(function (blob) {
-          spinner.classList.add('hidden');
+                  const left = Math.min(startX, endX);
+                  const top = Math.min(startY, endY);
+                  const width = Math.abs(endX - startX);
+                  const height = Math.abs(endY - startY);
 
-          if (blob.size > 30 * 1024) {
-            errorMessage.textContent = `⚠️ File size ${Math.round(blob.size / 1024)} KB (Limit: 30 KB). Compression बढ़ाएँ।`;
-            errorMessage.classList.remove('hidden');
-            return;
-          }
+                  rect.style.left = left + 'px';
+                  rect.style.top = top + 'px';
+                  rect.style.width = width + 'px';
+                  rect.style.height = height + 'px';
+                });
 
-          const resizedDataURL = URL.createObjectURL(blob);
-          preview.src = resizedDataURL;
-          preview.classList.remove('hidden');
-          downloadLink.href = resizedDataURL;
-          downloadLink.classList.remove('hidden');
-          successMessage.classList.remove('hidden');
-        }, 'image/jpeg', quality);
+                img.addEventListener('mouseup', () => {
+                  isSelecting = false;
+                  if (!rect) return;
+
+                  const croppedCanvas = document.createElement('canvas');
+                  const ctx = croppedCanvas.getContext('2d');
+                  const imgData = img.src;
+
+                  const cropImg = new Image();
+                  cropImg.onload = () => {
+                    const width = parseInt(rect.style.width);
+                    const height = parseInt(rect.style.height);
+                    croppedCanvas.width = width;
+                    croppedCanvas.height = height;
+
+                    ctx.drawImage(cropImg,
+                      parseInt(rect.style.left), parseInt(rect.style.top),
+                      width, height,
+                      0, 0, width, height);
+
+                    const croppedDataURL = croppedCanvas.toDataURL();
+
+                    // Close popup
+                    window.close();
+
+                    // Now resize and compress
+                    resizeAndCompress(croppedDataURL);
+                  };
+                  cropImg.src = imgData;
+                });
+              <\/script>
+            </body>
+          </html>
+        `);
       };
       img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   });
+
+  function resizeAndCompress(dataURL) {
+    const img = new Image();
+    img.onload = function () {
+      const ctx = canvas.getContext('2d');
+      canvas.width = 213;
+      canvas.height = 213;
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const scale = Math.min(213 / img.width, 213 / img.height);
+      const x = (213 - img.width * scale) / 2;
+      const y = (213 - img.height * scale) / 2;
+
+      ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+      const quality = parseInt(qualitySlider.value) / 100;
+
+      canvas.toBlob(function (blob) {
+        spinner.classList.add('hidden');
+
+        const finalSizeKB = blob.size / 1024;
+        sizeInfo.innerHTML = `
+          🔹 Original Size: ${originalSizeKB.toFixed(2)} KB<br/>
+          🔹 Final Size: ${finalSizeKB.toFixed(2)} KB
+        `;
+
+        if (blob.size > 30 * 1024) {
+          alert("⚠️ File size exceeds 30 KB. Try increasing compression.");
+          return;
+        }
+
+        const resizedDataURL = URL.createObjectURL(blob);
+        preview.src = resizedDataURL;
+        preview.classList.remove('hidden');
+        downloadLink.href = resizedDataURL;
+        downloadLink.classList.remove('hidden');
+      }, 'image/jpeg', quality);
+    };
+    img.src = dataURL;
+  }
 </script>
 
 </body>
