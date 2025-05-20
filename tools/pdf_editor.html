@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ऑनलाइन PDF उपकरण - Time Saving Tools</title>
+    <title>PDF से पेज हटाएं - Time Saving Tools</title>
     <!-- हेड सेक्शन में स्टाइलिंग के लिए CSS -->
     <style>
         /* बेसिक स्टाइलिंग */
@@ -16,12 +16,12 @@
         }
 
         .container {
-            max-width: 960px; /* कंटेंट की अधिकतम चौड़ाई */
+            max-width: 800px; /* कंटेंट की अधिकतम चौड़ाई */
             margin: 20px auto; /* ऊपर नीचे 20px मार्जिन, दाएं बाएं ऑटो (बीच में लाने के लिए) */
             padding: 0 20px; /* कंटेंट के चारों ओर पैडिंग */
         }
 
-        /* हेडर की स्टाइलिंग */
+        /* हेडर की स्टाइलिंग (पहले जैसी ही) */
         header {
             background-color: #fff;
             padding: 20px 0;
@@ -36,35 +36,41 @@
             font-weight: bold;
 
             /* रंगीन एनिमेटेड टेक्स्ट के लिए */
-            /* बैकग्राउंड में ग्रेडिएंट (इंद्रधनुषी रंगों जैसा) */
             background: linear-gradient(270deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
-            background-size: 400% auto; /* ग्रेडिएंट को टेक्स्ट से ज़्यादा चौड़ा बनाएं ताकि एनीमेशन दिखे */
-            -webkit-background-clip: text; /* बैकग्राउंड को टेक्स्ट के आकार में क्लिप करें (पुराने ब्राउज़रों के लिए) */
+            background-size: 400% auto; /* ग्रेडिएंट को टेक्स्ट से ज़्यादा चौड़ा बनाएं */
+            -webkit-background-clip: text; /* बैकग्राउंड को टेक्स्ट के आकार में क्लिप करें */
             background-clip: text; /* बैकग्राउंड को टेक्स्ट के आकार में क्लिप करें */
-            color: transparent; /* टेक्स्ट का रंग पारदर्शी करें ताकि बैकग्राउंड दिखे */
+            color: transparent; /* टेक्स्ट का रंग पारदर्शी करें */
             animation: gradientAnimation 10s linear infinite; /* एनीमेशन लागू करें */
             display: inline-block; /* 'background-clip' के सही काम करने के लिए */
         }
 
         /* ग्रेडिएंट एनीमेशन की परिभाषा */
         @keyframes gradientAnimation {
-            0% { background-position: 0% center; } /* एनीमेशन की शुरुआत */
-            100% { background-position: 400% center; } /* एनीमेशन का अंत (बैकग्राउंड को शिफ्ट करें) */
+            0% { background-position: 0% center; }
+            100% { background-position: 400% center; }
         }
 
         /* मुख्य कंटेंट क्षेत्र की स्टाइलिंग */
         main {
             background-color: #fff;
-            padding: 20px;
+            padding: 30px; /* पैडिंग बढ़ाएं */
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* हल्का शैडो */
             border-radius: 8px; /* किनारे हल्के गोल करें */
+            text-align: center; /* मुख्य सामग्री को बीच में करें */
         }
 
         main h2 {
             text-align: center;
-            color: #0056b3; /* हेडिंग का रंग */
+            color: #f39c12; /* शीर्षक का रंग (पीला-नारंगी) */
             margin-top: 0;
+            margin-bottom: 20px;
         }
+
+         main p {
+             margin-bottom: 20px;
+         }
+
 
         .tool-section {
             margin-bottom: 30px;
@@ -72,77 +78,147 @@
             border: 1px solid #ddd; /* सेक्शन के चारों ओर बॉर्डर */
             border-radius: 5px;
             background-color: #f9f9f9; /* हल्का बैकग्राउंड रंग */
+            text-align: left; /* टेक्स्ट को बाएं संरेखित करें */
         }
+         .tool-section h3 {
+             text-align: center; /* इस हेडिंग को बीच में रखें */
+             margin-top: 0;
+             color: #555;
+         }
+
 
         .file-upload-area {
-            border: 2px dashed #ccc; /* डैशेड बॉर्डर */
-            padding: 30px;
+            border: 2px dashed #f39c12; /* डैशेड बॉर्डर (पीला-नारंगी) */
+            padding: 40px 20px; /* पैडिंग बढ़ाएं */
             text-align: center;
             margin-bottom: 20px;
-            background-color: #eee;
+            background-color: #fdf5eb; /* हल्का पीला बैकग्राउंड */
             cursor: pointer; /* माउस पॉइंटर को हाथ वाला बनाएं */
             transition: border-color 0.3s ease, background-color 0.3s ease; /* होवर पर बदलाव के लिए एनीमेशन */
         }
 
         .file-upload-area:hover {
-            border-color: #007bff; /* होवर पर बॉर्डर का रंग बदलें */
-            background-color: #e9e9e9; /* होवर पर बैकग्राउंड का रंग बदलें */
+            border-color: #e67e22; /* होवर पर गहरा नारंगी */
+            background-color: #fae5cd; /* होवर पर गहरा बैकग्राउंड */
         }
 
          /* ड्रैग-एंड-ड्रॉप के दौरान हाईलाइट स्टाइल */
         .file-upload-area.highlight {
-            border-color: #007bff;
-            background-color: #cce5ff; /* हल्का नीला बैकग्राउंड */
+            border-color: #e67e22;
+            background-color: #f8e9da; /* हल्का नारंगी हाईलाइट */
         }
 
 
-        .file-upload-area input[type="file"] {
+         .file-upload-area input[type="file"] {
             display: none; /* डिफ़ॉल्ट फ़ाइल इनपुट को छिपा दें */
         }
 
          .file-upload-area label {
             display: block; /* लेबल को ब्लॉक तत्व बनाएं */
             cursor: pointer; /* लेबल पर भी हाथ वाला पॉइंटर दिखे */
+            font-size: 1.2em; /* लेबल फ़ॉन्ट आकार */
+            font-weight: bold;
+            color: #34495e; /* लेबल टेक्स्ट का रंग */
          }
 
+         .file-upload-area p {
+             margin-top: 10px;
+             font-size: 0.9em;
+             color: #7f8c8d;
+         }
 
-        .tool-options {
-            display: grid; /* ग्रिड लेआउट */
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* प्रतिक्रियाशील ग्रिड कॉलम (न्यूनतम 150px, अधिकतम उपलब्ध स्थान) */
-            gap: 15px; /* ग्रिड आइटम्स के बीच की दूरी */
+         #file-name {
+             margin-top: 15px;
+             font-size: 1.1em;
+             font-weight: bold;
+             color: #2c3e50; /* गहरा नीला रंग */
+             min-height: 1.3em; /* नाम न होने पर भी स्पेस बनाए रखने के लिए */
+             text-align: center; /* नाम को बीच में रखें */
+         }
+
+        .remove-options {
+             margin-top: 20px;
+             text-align: left;
+        }
+        .remove-options label {
+             display: block;
+             margin-bottom: 8px;
+             font-weight: bold;
+             color: #34495e;
+        }
+        .remove-options input[type="text"] { /* पेज रेंज इनपुट के लिए */
+             width: calc(100% - 22px);
+             padding: 10px;
+             margin-bottom: 15px;
+             border: 1px solid #ccc;
+             border-radius: 4px;
+             font-size: 1em;
+             box-sizing: border-box;
+        }
+
+
+        .remove-button-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .remove-button {
+            display: inline-block; /* बटन को सामग्री के अनुसार चौड़ाई दें */
+            padding: 15px 30px; /* पैडिंग */
+            background-color: #e67e22; /* नारंगी रंग */
+            color: white; /* टेक्स्ट का रंग */
+            text-align: center;
+            border: none; /* बॉर्डर नहीं */
+            border-radius: 5px; /* किनारे गोल */
+            cursor: pointer;
+            font-size: 1.2em; /* फ़ॉन्ट आकार */
+            font-weight: bold;
+            transition: background-color 0.3s ease; /* होवर एनीमेशन */
             margin-top: 20px;
         }
 
-        .tool-button {
-            display: block; /* बटन को पूरी चौड़ाई दें */
-            width: 100%;
-            padding: 15px;
-            background-color: #007bff; /* बटन का बैकग्राउंड रंग */
-            color: white; /* बटन टेक्स्ट का रंग */
-            text-align: center;
-            text-decoration: none; /* यदि लिंक हैं तो अंडरलाइन हटा दें */
-            border: none; /* बॉर्डर हटा दें */
-            border-radius: 5px; /* किनारे गोल करें */
-            cursor: pointer;
-            transition: background-color 0.3s ease; /* होवर पर बैकग्राउंड रंग बदलने के लिए एनीमेशन */
-            font-size: 1em;
+        .remove-button:hover {
+            background-color: #d35400; /* होवर पर गहरा नारंगी */
         }
 
-        .tool-button:hover {
-            background-color: #0056b3; /* होवर पर गहरा नीला रंग */
-        }
+         #status-message {
+             margin-top: 15px;
+             font-weight: bold;
+             color: #555;
+             min-height: 1.5em; /* मैसेज न होने पर भी स्पेस बनाए रखने के लिए */
+         }
 
-        .placeholder-editor {
+
+        .result-area {
             margin-top: 30px;
             padding: 30px;
-            border: 1px solid #ccc;
+            border: 2px dashed #2ecc71; /* हरा डैशेड बॉर्डर */
             border-radius: 5px;
-            min-height: 200px; /* न्यूनतम ऊंचाई */
-            background-color: #fff;
+            min-height: 80px; /* न्यूनतम ऊंचाई */
+            background-color: #ecf0f1; /* हल्का नीला-ग्रे बैकग्राउंड */
             text-align: center;
-            color: #666; /* टेक्स्ट का रंग */
+            color: #27ae60; /* टेक्स्ट का रंग */
             font-style: italic; /* टेक्स्ट को इटैलिक करें */
+            display: flex; /* फ्लेक्सबॉक्स लेआउट */
+            justify-content: center; /* क्षैतिज रूप से बीच में करें */
+            align-items: center; /* लंबवत रूप से बीच में करें */
+            display: none; /* शुरुआत में छिपा हुआ */
         }
+
+        .result-area p {
+             margin: 0; /* डिफ़ॉल्ट पैराग्राफ मार्gin हटा दें */
+        }
+
+        .result-area a {
+             color: #27ae60; /* लिंक का रंग */
+             text-decoration: none; /* अंडरलाइन हटा दें */
+             font-weight: bold;
+        }
+
+         .result-area a:hover {
+             text-decoration: underline; /* होवर पर अंडरलाइन करें */
+         }
+
 
         /* फुटर की स्टाइलिंग */
         footer {
@@ -153,17 +229,32 @@
             font-size: 0.9em; /* फ़ॉन्ट आकार */
         }
 
-         /* छोटी स्क्रीन के लिए मीडिया क्वेरी (यदि आवश्यक हो) */
+         /* छोटी स्क्रीन के लिए मीडिया क्वेरी */
          @media (max-width: 600px) {
             header h1 {
                 font-size: 1.8em; /* छोटी स्क्रीन पर फ़ॉन्ट छोटा करें */
             }
-            .tool-options {
-                grid-template-columns: 1fr; /* छोटी स्क्रीन पर सिंगल कॉलम ग्रिड */
-            }
+             .file-upload-area {
+                 padding: 30px 10px; /* पैडिंग कम करें */
+             }
+             .file-upload-area label {
+                 font-size: 1em; /* फ़ॉन्ट आकार कम करें */
+             }
+              .remove-button {
+                padding: 12px 20px; /* पैडिंग कम करें */
+                font-size: 1em; /* फ़ॉन्ट आकार कम करें */
+             }
+              .remove-options input[type="text"] {
+                 width: calc(100% - 20px); /* छोटी स्क्रीन के लिए एडजस्ट करें */
+             }
          }
 
     </style>
+    <!-- pdf-lib लाइब्रेरी को CDN से लोड करें -->
+    <!-- Promise polyfill कुछ पुराने ब्राउज़र के लिए (वैकल्पिक) -->
+     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+
 </head>
 <body>
 
@@ -177,54 +268,48 @@
     <div class="container">
         <main>
             <!-- पेज का मुख्य शीर्षक -->
-            <h2>ऑनलाइन PDF उपकरण</h2>
+            <h2>PDF से पेज हटाएं</h2>
 
-            <p>यह पेज आपकी PDF फ़ाइलों को संपादित करने के लिए उपलब्ध उपकरणों का इंटरफ़ेस दिखाता है।</p>
+            <p>अपनी PDF फ़ाइल से एक या अधिक पृष्ठों को हटाएं।</p>
+
 
             <!-- फ़ाइल अपलोड सेक्शन -->
             <div class="tool-section">
-                <h3>PDF फ़ाइल अपलोड करें</h3>
-                <p>शुरू करने के लिए, अपनी PDF फ़ाइल चुनें या उसे नीचे दिए गए क्षेत्र में ड्रैग और ड्रॉप करें।</p>
+                <h3>अपनी PDF फ़ाइल चुनें</h3>
 
                 <div class="file-upload-area" id="drop-area">
                     <!-- हिडन फ़ाइल इनपुट। लेबल पर क्लिक करने से यह सक्रिय होगा। -->
                     <input type="file" accept=".pdf" id="pdfFile" />
                     <!-- लेबल जो क्लिक करने योग्य क्षेत्र के रूप में काम करेगा -->
                     <label for="pdfFile">अपनी PDF फ़ाइल चुनें या यहां ड्रैग और ड्रॉप करें</label>
+                    <p>केवल .pdf फ़ाइलें स्वीकार की जाती हैं।</p>
                     <!-- चुनी गई फ़ाइल का नाम दिखाने के लिए -->
                     <p id="file-name"></p>
                 </div>
-                <p><small><strong>कृपया ध्यान दें:</strong> यह केवल इंटरफ़ेस है। फ़ाइल अपलोड और प्रोसेसिंग के लिए बैकएंड (सर्वर-साइड कोड) या एडवांस्ड JavaScript कोड की आवश्यकता होगी जो इस उदाहरण में शामिल नहीं है।</small></p>
+
             </div>
 
-            <!-- उपकरण विकल्प सेक्शन -->
-            <div class="tool-section">
-                <h3>उपकरण चुनें</h3>
-                <p>अपनी फ़ाइल अपलोड करने के बाद, वह ऑपरेशन चुनें जो आप करना चाहते हैं:</p>
+             <!-- हटाने के विकल्प सेक्शन -->
+             <div class="tool-section remove-options" id="remove-options-section" style="display: none;">
+                 <h3>हटाए जाने वाले पृष्ठ निर्दिष्ट करें</h3>
 
-                <!-- टूल बटनों के लिए ग्रिड लेआउट -->
-                <div class="tool-options">
-                    <!-- प्रत्येक बटन एक टूल का प्रतिनिधित्व करता है -->
-                    <!-- onclick इवेंट केवल एक डेमो अलर्ट दिखाता है -->
-                    <button class="tool-button" onclick="alert('यह केवल एक डेमो है। वास्तविक PDF मर्ज कार्यक्षमता कोडिंग की आवश्यकता है।')">PDF Merge करें</button>
-                    <button class="tool-button" onclick="alert('यह केवल एक डेमो है। वास्तविक PDF स्प्लिट कार्यक्षमता कोडिंग की आवश्यकता है।')">PDF Split करें</button>
-                    <button class="tool-button" onclick="alert('यह केवल एक डेमो है। वास्तविक PDF Compress कार्यक्षमता कोडिंग की आवश्यकता है।')">PDF Compress करें</button>
-                    <button class="tool-button" onclick="alert('यह केवल एक डेमो है। वास्तविक PDF टेक्स्ट एडिट कार्यक्षमता कोडिंग की आवश्यकता है।')">PDF टेक्स्ट एडिट करें</button>
-                    <button class="tool-button" onclick="alert('यह केवल एक डेमो है। वास्तविक PDF इमेज जोड़ें कार्यक्षमता कोडिंग की आवश्यकता है।')">PDF इमेज जोड़ें</button>
-                    <button class="tool-button" onclick="alert('यह केवल एक डेमो है। वास्तविक PDF Sign कार्यक्षमता कोडिंग की आवश्यकता है।')">PDF Sign करें</button>
-                    <!-- आप यहां और भी टूल बटन जोड़ सकते हैं -->
-                </div>
-                 <p><small>इन बटनों पर क्लिक करने से अभी कोई कार्य नहीं होगा। वास्तविक कार्यक्षमता के लिए आपको सर्वर-साइड कोड (जैसे Python, Node.js) या एडवांस्ड क्लाइंट-साइड लाइब्रेरीज़ (जैसे PDF.js + एक एडिटिंग लेयर, या व्यावसायिक API) का उपयोग करना होगा।</small></p>
+                 <label for="pagesToRemove">हटाए जाने वाले पृष्ठ (कॉमा से अलग करें या रेंज का उपयोग करें):</label>
+                 <input type="text" id="pagesToRemove" placeholder="उदा: 1, 3-5, 7-LAST" />
+                 <p><small>पेज संख्याएं कॉमा से अलग करें या रेंज का उपयोग करें। "LAST" का उपयोग अंतिम पृष्ठ के लिए करें।</small></p>
+
+             </div>
+
+
+            <!-- Remove बटन सेक्शन -->
+            <div class="remove-button-section">
+                 <!-- बटन पर क्लिक करने पर JavaScript फ़ंक्शन कॉल करें -->
+                <button class="remove-button" id="removeBtn">पेज हटाएं</button>
+                 <p id="status-message"></p> <!-- स्थिति संदेश दिखाने के लिए -->
             </div>
 
-            <!-- PDF प्रीव्यू/एडिटर क्षेत्र के लिए प्लेसहोल्डर -->
-             <div class="tool-section">
-                 <h3>PDF प्रीव्यू/एडिटर क्षेत्र</h3>
-                 <div class="placeholder-editor">
-                     <p>यहां अपलोड की गई PDF का प्रीव्यू दिखेगा या संपादन इंटरफ़ेस लोड होगा।</p>
-                     <p>(यह क्षेत्र वास्तविक एडिटर को दिखाने के लिए एक प्लेसहोल्डर है)</p>
-                 </div>
-                 <p><small>वास्तविक PDF दिखाने या संपादित करने के लिए PDF.js जैसे JavaScript लाइब्रेरी या अन्य सेवाओं का उपयोग करने की आवश्यकता होगी।</small></p>
+            <!-- परिणाम क्षेत्र -->
+             <div class="result-area" id="result-area">
+                 <p>संशोधित PDF फ़ाइल यहां डाउनलोड के लिए उपलब्ध होगी।</p>
              </div>
 
         </main>
@@ -235,27 +320,32 @@
         <p>© 2023 Time Saving Tools. All rights reserved.</p>
     </footer>
 
-    <!-- फ़ाइल इनपुट और ड्रैग-एंड-ड्रॉप हैंडलिंग के लिए JavaScript (बेसिक) -->
+    <!-- फ़ाइल हैंडलिंग और पेज हटाने के लिए JavaScript -->
     <script>
-        // फ़ाइल इनपुट सेलेक्ट करने पर फ़ाइल का नाम दिखाएं
+        // pdf-lib लाइब्रेरी का संदर्भ प्राप्त करें (CDN से लोड होने के बाद)
+        const { PDFDocument } = PDFLib;
+
+        // HTML तत्वों का संदर्भ प्राप्त करें
         const fileInput = document.getElementById('pdfFile');
         const fileNameDisplay = document.getElementById('file-name');
-        const fileUploadLabel = document.querySelector('.file-upload-area label'); // लेबल तत्व
+        const fileUploadLabel = document.querySelector('.file-upload-area label');
+        const dropArea = document.getElementById('drop-area');
+        const removeOptionsSection = document.getElementById('remove-options-section');
+        const pagesToRemoveInput = document.getElementById('pagesToRemove');
+        const removeButton = document.getElementById('removeBtn');
+        const statusMessage = document.getElementById('status-message');
+        const resultArea = document.getElementById('result-area');
 
+
+        let selectedFile = null; // चुनी गई फ़ाइल को स्टोर करने के लिए
+
+
+        // फ़ाइल इनपुट में बदलाव होने पर फ़ाइल को हैंडल करें
         fileInput.addEventListener('change', function() {
-            if (fileInput.files.length > 0) {
-                fileNameDisplay.textContent = 'चुनी गई फ़ाइल: ' + fileInput.files[0].name;
-                fileUploadLabel.style.display = 'none'; // फ़ाइल चुनने के बाद "फाइल चुनें..." लेबल छिपा दें
-            } else {
-                fileNameDisplay.textContent = '';
-                fileUploadLabel.style.display = 'block'; // यदि कोई फ़ाइल नहीं चुनी गई तो लेबल दिखाएं
-            }
+            handleFiles(fileInput.files);
         });
 
-        // ड्रैग और ड्रॉप कार्यक्षमता (बेसिक)
-        const dropArea = document.getElementById('drop-area');
-
-        // डिफ़ॉल्ट व्यवहार रोकें (फ़ाइल ब्राउज़र में नहीं खुलनी चाहिए)
+        // ड्रैग और ड्रॉप कार्यक्षमता
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropArea.addEventListener(eventName, preventDefaults, false);
         });
@@ -272,7 +362,7 @@
 
         // ड्रैग खत्म होने या ड्रॉप होने पर हाईलाइट हटा दें
         ['dragleave', 'drop'].forEach(eventName => {
-            dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+            dropArea.classList.remove('highlight');
         });
 
         // फ़ाइल ड्रॉप होने पर हैंडल करें
@@ -281,25 +371,204 @@
         function handleDrop(e) {
             const dt = e.dataTransfer;
             const files = dt.files;
+            handleFiles(files);
+        }
 
-            // सरलता के लिए मान लें कि केवल एक फ़ाइल ड्रॉप की गई है
-            if (files.length > 0) {
-                const pdfFile = files[0];
-                if (pdfFile.type === 'application/pdf') {
-                     fileInput.files = files; // ड्रॉप की गई फ़ाइल को इनपुट में असाइन करें
-                     fileNameDisplay.textContent = 'चुनी गई फ़ाइल: ' + pdfFile.name;
-                     fileUploadLabel.style.display = 'none'; // लेबल छिपा दें
-                     // यहां आप आमतौर पर फ़ाइल को प्रोसेस करेंगे (जैसे पढ़ना, सर्वर पर भेजना)
-                     console.log('PDF फ़ाइल ड्रॉप की गई:', pdfFile.name);
-                     // उपयोगकर्ता को सूचित करने के लिए अलर्ट
-                     alert('PDF फ़ाइल ड्रॉप की गई! लेकिन वास्तविक प्रोसेसिंग के लिए कोडिंग की आवश्यकता है। कंसोल देखें।');
-                } else {
-                    alert('केवल PDF फ़ाइलें स्वीकार की जाती हैं।');
-                     fileNameDisplay.textContent = '';
-                     fileUploadLabel.style.display = 'block';
-                }
+        // फ़ाइलों को प्रोसेस करें (चाहे इनपुट से चुनें या ड्रॉप करें)
+        function handleFiles(files) {
+            selectedFile = null; // पिछली फ़ाइल को साफ़ करें
+            fileNameDisplay.textContent = ''; // फ़ाइल नाम डिस्प्ले साफ़ करें
+            statusMessage.textContent = ''; // स्थिति संदेश साफ़ करें
+            resultArea.style.display = 'none'; // परिणाम क्षेत्र छिपाएं
+            removeOptionsSection.style.display = 'none'; // Remove विकल्प छिपाएं
+            pagesToRemoveInput.value = ''; // इनपुट साफ़ करें
+
+
+            // केवल एक PDF फ़ाइल स्वीकार करें
+            const pdfFile = Array.from(files).find(f => f.type === 'application/pdf');
+
+            if (pdfFile) {
+                selectedFile = pdfFile;
+                fileNameDisplay.textContent = 'चुनी गई फ़ाइल: ' + selectedFile.name;
+                fileUploadLabel.style.display = 'none'; // लेबल छिपा दें
+
+                // PDF फ़ाइल चुने जाने पर Remove विकल्प दिखाएं
+                 removeOptionsSection.style.display = 'block';
+                 statusMessage.textContent = 'अब हटाए जाने वाले पृष्ठों को दर्ज करें और "पेज हटाएं" पर क्लिक करें।';
+
+
+            } else {
+                 // यदि कोई फ़ाइल चुनी गई लेकिन वह PDF नहीं है
+                 if(files.length > 0) {
+                     alert('कृपया केवल PDF फ़ाइल चुनें।');
+                 }
+                fileInput.value = ''; // इनपुट रीसेट करें
+                fileUploadLabel.style.display = 'block'; // लेबल दिखाएं
+                fileNameDisplay.textContent = '';
+                statusMessage.textContent = 'कृपया पेज हटाने के लिए एक PDF फ़ाइल चुनें।';
             }
         }
+
+         // पेज रेंज बदलने पर परिणाम क्षेत्र छिपाएं
+        pagesToRemoveInput.addEventListener('input', function() {
+            resultArea.style.display = 'none';
+            statusMessage.textContent = 'अब हटाए जाने वाले पृष्ठों को दर्ज करें और "पेज हटाएं" पर क्लिक करें।'; // स्थिति संदेश रीसेट करें
+        });
+
+
+        // Remove बटन पर क्लिक हैंडल करें
+        removeButton.addEventListener('click', async function() {
+            if (!selectedFile) {
+                alert('कृप्या पृष्ठ हटाने से पहले एक PDF फ़ाइल चुनें।');
+                return;
+            }
+
+            const pagesToRemoveText = pagesToRemoveInput.value.trim();
+            if (pagesToRemoveText === '') {
+                alert('कृपया हटाए जाने वाले पृष्ठों की संख्या दर्ज करें।');
+                return;
+            }
+
+            statusMessage.textContent = 'पेज हटाए जा रहे हैं...';
+            removeButton.disabled = true; // बटन को डिसेबल करें
+            resultArea.style.display = 'none'; // परिणाम क्षेत्र छिपाएं
+
+
+            try {
+                // फ़ाइल को ArrayBuffer के रूप में पढ़ें
+                const arrayBuffer = await selectedFile.arrayBuffer();
+
+                // ArrayBuffer से मूल PDF दस्तावेज़ लोड करें
+                const pdfDoc = await PDFDocument.load(arrayBuffer);
+                const totalPages = pdfDoc.getPageCount();
+
+                // हटाए जाने वाले पृष्ठों की सूची पार्स करें (0-आधारित इंडेक्स)
+                const pagesToRemoveIndices = [];
+                const rawRanges = pagesToRemoveText.split(',').map(r => r.trim()).filter(r => r !== '');
+
+                for (const rawRange of rawRanges) {
+                    if (rawRange.includes('-')) {
+                        let [start, end] = rawRange.split('-').map(p => p.trim().toUpperCase());
+
+                        start = parseInt(start);
+                        if (end === 'LAST') {
+                            end = totalPages;
+                        } else {
+                            end = parseInt(end);
+                        }
+
+                        // पेज संख्या 1-आधारित है, सरणी इंडेक्स 0-आधारित है
+                        if (!isNaN(start) && !isNaN(end) && start >= 1 && end >= start && start <= totalPages && end <= totalPages) {
+                            for (let i = start - 1; i < end; i++) {
+                                 if (!pagesToRemoveIndices.includes(i)) { // डुप्लिकेट से बचें
+                                     pagesToRemoveIndices.push(i);
+                                 }
+                            }
+                        } else {
+                            throw new Error(`अमान्य पृष्ठ रेंज फॉर्मेट या संख्या: ${rawRange}`);
+                        }
+                    } else {
+                        const pageNum = parseInt(rawRange);
+                         if (!isNaN(pageNum) && pageNum >= 1 && pageNum <= totalPages) {
+                             const pageIndex = pageNum - 1; // 0-आधारित इंडेक्स
+                             if (!pagesToRemoveIndices.includes(pageIndex)) { // डुप्लिकेट से बचें
+                                 pagesToRemoveIndices.push(pageIndex);
+                             }
+                         } else {
+                             throw new Error(`अमान्य पृष्ठ संख्या: ${rawRange}`);
+                         }
+                    }
+                }
+
+                 if (pagesToRemoveIndices.length === 0) {
+                     throw new Error('हटाए जाने के लिए कोई मान्य पृष्ठ दर्ज नहीं किया गया।');
+                 }
+
+                 // पृष्ठों को हटाने के लिए, हम एक नया PDF बनाएंगे जिसमें वे पृष्ठ नहीं होंगे
+                 // जिन्हें हटाया जाना है। हटाए जाने वाले इंडेक्स को क्रमबद्ध करें और रिवर्स करें
+                 // ताकि हम पीछे से हटाना शुरू कर सकें (इंडेक्स बदलने से बचने के लिए यदि हम deletePage का उपयोग करें)
+                 // लेकिन copyPages के साथ एक नया बनाने में इंडेक्स बदलने की चिंता कम होती है।
+                 // हालाँकि, deletePages भी संभव है, लेकिन इंडेक्स प्रबंधन कठिन होता है।
+                 // copyPages एक सुरक्षित तरीका है।
+
+                 const indicesToKeep = [];
+                 for(let i = 0; i < totalPages; i++) {
+                     if (!pagesToRemoveIndices.includes(i)) {
+                         indicesToKeep.push(i);
+                     }
+                 }
+
+                 if (indicesToKeep.length === 0) {
+                     throw new Error('सभी पृष्ठ हटाए जा रहे हैं। परिणाम एक खाली PDF होगी।');
+                 }
+
+                // एक नया, खाली PDF दस्तावेज़ बनाएं
+                const modifiedPdf = await PDFDocument.create();
+
+                statusMessage.textContent = `बाकी ${indicesToKeep.length} पृष्ठों को कॉपी किया जा रहा है...`;
+
+                // मूल PDF से रखे जाने वाले पृष्ठों को कॉपी करें
+                const copiedPages = await modifiedPdf.copyPages(originalPdf, indicesToKeep);
+
+                // कॉपी किए गए पृष्ठों को नए PDF में जोड़ें
+                copiedPages.forEach((page) => {
+                    modifiedPdf.addPage(page);
+                });
+
+
+                // संशोधित PDF को बाइट्स के रूप में सहेजें
+                const pdfBytes = await modifiedPdf.save();
+
+                // बाइट्स से एक Blob बनाएं
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+                // डाउनलोड लिंक बनाएं
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                // मूल नाम के साथ '_modified' जोड़ें
+                const originalName = selectedFile.name.split('.').slice(0, -1).join('.');
+                a.download = `${originalName}_modified.pdf`;
+                 a.textContent = 'संशोधित PDF डाउनलोड करें';
+                 a.className = 'download-link'; // स्टाइलिंग के लिए क्लास
+
+                // परिणाम क्षेत्र में डाउनलोड लिंक दिखाएं
+                resultArea.innerHTML = ''; // पिछला कंटेंट साफ़ करें
+                resultArea.appendChild(a);
+                resultArea.style.display = 'flex'; // परिणाम क्षेत्र दिखाएं
+                resultArea.style.borderColor = '#2ecc71'; // हरे रंग का बॉर्डर
+                resultArea.style.color = '#27ae60'; // हरे रंग का टेक्स्ट
+
+                statusMessage.textContent = 'पेज सफलतापूर्वक हटाए गए!';
+
+                 // फ़ाइल चयन रीसेट करें (वैकल्पिक)
+                 selectedFile = null;
+                 fileInput.value = '';
+                 fileNameDisplay.textContent = '';
+                 fileUploadLabel.style.display = 'block'; // लेबल दिखाएं
+                 removeOptionsSection.style.display = 'none'; // Remove विकल्प छिपाएं
+                 pagesToRemoveInput.value = ''; // इनपुट साफ़ करें
+
+
+            } catch (error) {
+                statusMessage.textContent = 'पेज हटाने में त्रुटि हुई।';
+                resultArea.innerHTML = `<p style="color: red;">त्रुटि: ${error.message}</p>`;
+                resultArea.style.display = 'flex'; // परिणाम क्षेत्र दिखाएं
+                 resultArea.style.borderColor = 'red'; // लाल बॉर्डर
+                 resultArea.style.color = 'red'; // लाल टेक्स्ट
+
+                console.error('PDF Remove Pages त्रुटि:', error);
+
+            } finally {
+                removeButton.disabled = false; // बटन को फिर से सक्षम करें
+            }
+        });
+
+        // शुरुआत में Remove विकल्प और परिणाम क्षेत्र छिपाएं
+        removeOptionsSection.style.display = 'none';
+        resultArea.style.display = 'none';
+
+
     </script>
 
 </body>
