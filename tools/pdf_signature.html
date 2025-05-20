@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF में हस्ताक्षर जोड़ें - Time Saving Tools</title>
+    <!-- हेड सेक्शन में स्टाइलिंग के लिए CSS -->
+    <style>
+        /* बेसिक स्टाइलिंग */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px; /* कंटेंट की अधिकतम चौड़ाई */
+            margin: 20px auto; /* ऊपर नीचे 20px मार्gin, दाएं बाएं ऑटो (बीच में लाने के लिए) */
+            padding: 0 20px; /* कंटेंट के चारों ओर पैडिंग */
+        }
+
+        /* हेडर की स्टाइलिंग (पहले जैसी ही) */
+        header {
+            background-color: #fff;
+            padding: 20px 0;
+            text-align: center; /* हेडर टेक्स्ट को बीच में करें */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* हल्का शैडो */
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2.5em; /* हेडर टेक्स्ट का आकार */
+            margin: 0;
+            font-weight: bold;
+
+            /* रंगीन एनिमेटेड टेक्स्ट के लिए */
+            background: linear-gradient(270deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            background-size: 400% auto; /* ग्रेडिएंट को टेक्स्ट से ज़्यादा चौड़ा बनाएं */
+            -webkit-background-clip: text; /* बैकग्राउंड को टेक्स्ट के आकार में क्लिप करें */
+            background-clip: text; /* बैकग्राउंड को टेक्स्ट के आकार में क्लिप करें */
+            color: transparent; /* टेक्स्ट का रंग पारदर्शी करें */
+            animation: gradientAnimation 10s linear infinite; /* एनीमेशन लागू करें */
+            display: inline-block; /* 'background-clip' के सही काम करने के लिए */
+        }
+
+        /* ग्रेडिएंट एनीमेशन की परिभाषा */
+        @keyframes gradientAnimation {
+            0% { background-position: 0% center; }
+            100% { background-position: 400% center; }
+        }
+
+        /* मुख्य कंटेंट क्षेत्र की स्टाइलिंग */
+        main {
+            background-color: #fff;
+            padding: 30px; /* पैडिंग बढ़ाएं */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* हल्का शैडो */
+            border-radius: 8px; /* किनारे हल्के गोल करें */
+            text-align: center; /* मुख्य सामग्री को बीच में करें */
+        }
+
+        main h2 {
+            text-align: center;
+            color: #2ecc71; /* शीर्षक का रंग (हरा) */
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+         main p {
+             margin-bottom: 20px;
+         }
+
+
+        .tool-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd; /* सेक्शन के चारों ओर बॉर्डर */
+            border-radius: 5px;
+            background-color: #f9f9f9; /* हल्का बैकग्राउंड रंग */
+            text-align: left; /* टेक्स्ट को बाएं संरेखित करें */
+        }
+         .tool-section h3 {
+             text-align: center; /* इस हेडिंग को बीच में रखें */
+             margin-top: 0;
+             color: #555;
+         }
+
+
+        .file-upload-area {
+            border: 2px dashed #2ecc71; /* डैशेड बॉर्डर (हरा) */
+            padding: 40px 20px; /* पैडिंग बढ़ाएं */
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #ebfaeb; /* हल्का हरा बैकग्राउंड */
+            cursor: pointer; /* माउस पॉइंटर को हाथ वाला बनाएं */
+            transition: border-color 0.3s ease, background-color 0.3s ease; /* होवर पर बदलाव के लिए एनीमेशन */
+        }
+
+         /* इमेज अपलोड एरिया के लिए विशिष्ट स्टाइल */
+        .image-upload-area {
+            border: 2px dashed #3498db; /* नीला बॉर्डर */
+            background-color: #ebf5fb; /* हल्का नीला बैकग्राउंड */
+        }
+
+        .file-upload-area:hover {
+            border-color: #27ae60; /* होवर पर गहरा हरा */
+            background-color: #dcf2dc; /* होवर पर गहरा बैकग्राउंड */
+        }
+
+         .image-upload-area:hover {
+             border-color: #2980b9; /* होवर पर गहरा नीला */
+             background-color: #d4e6f1; /* होवर पर गहरा बैकग्राउंड */
+         }
+
+
+         /* ड्रैग-एंड-ड्रॉप के दौरान हाईलाइट स्टाइल */
+        .file-upload-area.highlight {
+            border-color: #27ae60;
+            background-color: #cce5ff; /* हल्का नीला हाईलाइट */
+        }
+
+
+         .file-upload-area input[type="file"] {
+            display: none; /* डिफ़ॉल्ट फ़ाइल इनपुट को छिपा दें */
+        }
+
+         .file-upload-area label {
+            display: block; /* लेबल को ब्लॉक तत्व बनाएं */
+            cursor: pointer; /* लेबल पर भी हाथ वाला पॉइंटर दिखे */
+            font-size: 1.2em; /* लेबल फ़ॉन्ट आकार */
+            font-weight: bold;
+            color: #34495e; /* लेबल टेक्स्ट का रंग */
+         }
+
+         .file-upload-area p {
+             margin-top: 10px;
+             font-size: 0.9em;
+             color: #7f8c8d;
+         }
+
+         #pdf-file-name, #signature-file-name {
+             margin-top: 15px;
+             font-size: 1.1em;
+             font-weight: bold;
+             color: #2c3e50; /* गहरा नीला रंग */
+             min-height: 1.3em; /* नाम न होने पर भी स्पेस बनाए रखने के लिए */
+             text-align: center; /* नाम को बीच में रखें */
+         }
+
+
+        .sign-button-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .sign-button {
+            display: inline-block; /* बटन को सामग्री के अनुसार चौड़ाई दें */
+            padding: 15px 30px; /* पैडिंग */
+            background-color: #2ecc71; /* हरा रंग */
+            color: white; /* टेक्स्ट का रंग */
+            text-align: center;
+            border: none; /* बॉर्डर नहीं */
+            border-radius: 5px; /* किनारे गोल */
+            cursor: pointer;
+            font-size: 1.2em; /* फ़ॉन्ट आकार */
+            font-weight: bold;
+            transition: background-color 0.3s ease; /* होवर एनीमेशन */
+            margin-top: 20px;
+        }
+
+        .sign-button:hover {
+            background-color: #27ae60; /* होवर पर गहरा हरा */
+        }
+
+         #status-message {
+             margin-top: 15px;
+             font-weight: bold;
+             color: #555;
+             min-height: 1.5em; /* मैसेज न होने पर भी स्पेस बनाए रखने के लिए */
+         }
+
+
+        .result-area {
+            margin-top: 30px;
+            padding: 30px;
+            border: 2px dashed #2ecc71; /* हरा डैशेड बॉर्डर */
+            border-radius: 5px;
+            min-height: 80px; /* न्यूनतम ऊंचाई */
+            background-color: #ecf0f1; /* हल्का नीला-ग्रे बैकग्राउंड */
+            text-align: center;
+            color: #27ae60; /* टेक्स्ट का रंग */
+            font-style: italic; /* टेक्स्ट को इटैलिक करें */
+            display: flex; /* फ्लेक्सबॉक्स लेआउट */
+            justify-content: center; /* क्षैतिज रूप से बीच में करें */
+            align-items: center; /* लंबवत रूप से बीच में करें */
+            display: none; /* शुरुआत में छिपा हुआ */
+        }
+
+        .result-area p {
+             margin: 0; /* डिफ़ॉल्ट पैराग्राफ मार्gin हटा दें */
+        }
+
+        .result-area a {
+             color: #27ae60; /* लिंक का रंग */
+             text-decoration: none; /* अंडरलाइन हटा दें */
+             font-weight: bold;
+        }
+
+         .result-area a:hover {
+             text-decoration: underline; /* होवर पर अंडरलाइन करें */
+         }
+
+
+        /* फुटर की स्टाइलिंग */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 20px;
+            color: #777;
+            font-size: 0.9em; /* फ़ॉन्ट आकार */
+        }
+
+         /* छोटी स्क्रीन के लिए मीडिया क्वेरी */
+         @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8em; /* छोटी स्क्रीन पर फ़ॉन्ट छोटा करें */
+            }
+             .file-upload-area {
+                 padding: 30px 10px; /* पैडिंग कम करें */
+             }
+             .file-upload-area label {
+                 font-size: 1em; /* फ़ॉन्ट आकार कम करें */
+             }
+              .sign-button {
+                padding: 12px 20px; /* पैडिंग कम करें */
+                font-size: 1em; /* फ़ॉन्ट आकार कम करें */
+             }
+         }
+
+    </style>
+    <!-- pdf-lib लाइब्रेरी को CDN से लोड करें -->
+    <!-- Promise polyfill कुछ पुराने ब्राउज़र के लिए (वैकल्पिक) -->
+     <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+
+</head>
+<body>
+
+    <!-- हेडर सेक्शन -->
+    <header>
+        <!-- वेबसाइट का नाम - रंगीन और एनिमेटेड -->
+        <h1>Time Saving Tools</h1>
+    </header>
+
+    <!-- मुख्य कंटेंट के लिए कंटेनर -->
+    <div class="container">
+        <main>
+            <!-- पेज का मुख्य शीर्षक -->
+            <h2>PDF में हस्ताक्षर जोड़ें</h2>
+
+            <p>अपनी PDF फ़ाइल में एक इमेज सिग्नेचर जोड़ें।</p>
+             <p><small><strong>नोट:</strong> यह टूल आपके द्वारा अपलोड की गई सिग्नेचर इमेज को PDF के अंतिम पृष्ठ के निचले-दाएं कोने में जोड़ता है। यह उन्नत डिजिटल सिग्नेचर (जैसे प्रमाणन) प्रदान नहीं करता है। आपको अपनी हस्ताक्षर इमेज (जैसे सफ़ेद बैकग्राउंड पर हस्ताक्षर करके उसकी फोटो या स्कैन) की आवश्यकता होगी।</small></p>
+
+
+            <!-- PDF फ़ाइल अपलोड सेक्शन -->
+            <div class="tool-section">
+                <h3>अपनी PDF फ़ाइल चुनें</h3>
+
+                <div class="file-upload-area" id="pdf-drop-area">
+                    <!-- हिडन फ़ाइल इनपुट। लेबल पर क्लिक करने से यह सक्रिय होगा। -->
+                    <input type="file" accept=".pdf" id="pdfFile" />
+                    <!-- लेबल जो क्लिक करने योग्य क्षेत्र के रूप में काम करेगा -->
+                    <label for="pdfFile">अपनी PDF फ़ाइल चुनें या यहां ड्रैग और ड्रॉप करें</label>
+                    <p>केवल .pdf फ़ाइलें स्वीकार की जाती हैं।</p>
+                    <!-- चुनी गई फ़ाइल का नाम दिखाने के लिए -->
+                    <p id="pdf-file-name"></p>
+                </div>
+
+            </div>
+
+             <!-- सिग्नेचर इमेज अपलोड सेक्शन -->
+            <div class="tool-section">
+                <h3>अपनी हस्ताक्षर इमेज चुनें</h3>
+
+                <div class="file-upload-area image-upload-area" id="signature-drop-area">
+                    <!-- हिडन फ़ाइल इनपुट। लेबल पर क्लिक करने से यह सक्रिय होगा। -->
+                    <input type="file" accept="image/*" id="signatureFile" />
+                    <!-- लेबल जो क्लिक करने योग्य क्षेत्र के रूप में काम करेगा -->
+                    <label for="signatureFile">अपनी सिग्नेचर इमेज फ़ाइल चुनें या यहां ड्रैग और ड्रॉप करें</label>
+                    <p>JPG, PNG, GIF, BMP, WEBP जैसी इमेज फ़ाइलें स्वीकार की जाती हैं।</p>
+                    <!-- चुनी गई फ़ाइल का नाम दिखाने के लिए -->
+                    <p id="signature-file-name"></p>
+                </div>
+
+            </div>
+
+
+            <!-- Sign बटन सेक्शन -->
+            <div class="sign-button-section">
+                 <!-- बटन पर क्लिक करने पर JavaScript फ़ंक्शन कॉल करें -->
+                <button class="sign-button" id="signBtn">PDF में हस्ताक्षर जोड़ें</button>
+                 <p id="status-message"></p> <!-- स्थिति संदेश दिखाने के लिए -->
+            </div>
+
+            <!-- परिणाम क्षेत्र -->
+             <div class="result-area" id="result-area">
+                 <!-- हस्ताक्षरित फ़ाइल का डाउनलोड लिंक यहां दिखेगा -->
+             </div>
+
+        </main>
+    </div>
+
+    <!-- फुटर सेक्शन -->
+    <footer>
+        <p>© 2023 Time Saving Tools. All rights reserved.</p>
+    </footer>
+
+    <!-- फ़ाइल हैंडलिंग और सिग्नेचर जोड़ने के लिए JavaScript -->
+    <script>
+        // pdf-lib लाइब्रेरी का संदर्भ प्राप्त करें (CDN से लोड होने के बाद)
+        const { PDFDocument } = PDFLib;
+
+        // HTML तत्वों का संदर्भ प्राप्त करें
+        const pdfFileInput = document.getElementById('pdfFile');
+        const pdfFileNameDisplay = document.getElementById('pdf-file-name');
+        const pdfFileUploadLabel = document.querySelector('#pdf-drop-area label');
+        const pdfDropArea = document.getElementById('pdf-drop-area');
+
+        const signatureFileInput = document.getElementById('signatureFile');
+        const signatureFileNameDisplay = document.getElementById('signature-file-name');
+        const signatureFileUploadLabel = document.querySelector('#signature-drop-area label');
+        const signatureDropArea = document.getElementById('signature-drop-area');
+
+
+        const signButton = document.getElementById('signBtn');
+        const statusMessage = document.getElementById('status-message');
+        const resultArea = document.getElementById('result-area');
+
+        let selectedPdfFile = null; // चुनी गई PDF फ़ाइल
+        let selectedSignatureFile = null; // चुनी गई सिग्नेचर इमेज फ़ाइल
+
+
+        // फ़ाइल इनपुट में बदलाव होने पर फ़ाइल को हैंडल करें
+        pdfFileInput.addEventListener('change', function() {
+            handlePdfFile(pdfFileInput.files);
+        });
+        signatureFileInput.addEventListener('change', function() {
+            handleSignatureFile(signatureFileInput.files);
+        });
+
+
+        // ड्रैग और ड्रॉप कार्यक्षमता (PDF क्षेत्र के लिए)
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            pdfDropArea.addEventListener(eventName, preventDefaults, false);
+        });
+        pdfDropArea.addEventListener('drop', handlePdfDrop, false);
+
+        // ड्रैग करते समय हाईलाइट करें (PDF)
+        ['dragenter', 'dragover'].forEach(eventName => {
+            pdfDropArea.addEventListener(eventName, () => pdfDropArea.classList.add('highlight'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            pdfDropArea.classList.remove('highlight');
+        });
+
+
+        // ड्रैग और ड्रॉप कार्यक्षमता (सिग्नेचर क्षेत्र के लिए)
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            signatureDropArea.addEventListener(eventName, preventDefaults, false);
+        });
+        signatureDropArea.addEventListener('drop', handleSignatureDrop, false);
+
+         // ड्रैग करते समय हाईलाइट करें (सिग्नेचर)
+        ['dragenter', 'dragover'].forEach(eventName => {
+            signatureDropArea.addEventListener(eventName, () => signatureDropArea.classList.add('highlight'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+             signatureDropArea.classList.remove('highlight');
+        });
+
+
+        function preventDefaults (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+
+        // PDF फ़ाइल हैंडलिंग
+        function handlePdfFile(files) {
+            selectedPdfFile = null;
+            pdfFileNameDisplay.textContent = '';
+            statusMessage.textContent = '';
+            resultArea.style.display = 'none';
+
+            const file = Array.from(files).find(f => f.type === 'application/pdf');
+
+            if (file) {
+                selectedPdfFile = file;
+                pdfFileNameDisplay.textContent = 'चुनी गई फ़ाइल: ' + selectedPdfFile.name;
+                pdfFileUploadLabel.style.display = 'none';
+                updateStatus();
+
+            } else {
+                 if(files.length > 0) { alert('कृपया केवल PDF फ़ाइल चुनें।'); }
+                pdfFileInput.value = '';
+                pdfFileUploadLabel.style.display = 'block';
+                updateStatus();
+            }
+        }
+
+        function handlePdfDrop(e) {
+             const dt = e.dataTransfer;
+             const files = dt.files;
+             handlePdfFile(files);
+        }
+
+        // सिग्नेचर इमेज फ़ाइल हैंडलिंग
+        function handleSignatureFile(files) {
+            selectedSignatureFile = null;
+            signatureFileNameDisplay.textContent = '';
+            statusMessage.textContent = '';
+            resultArea.style.display = 'none';
+
+
+            const file = Array.from(files).find(f => f.type.startsWith('image/'));
+
+            if (file) {
+                selectedSignatureFile = file;
+                signatureFileNameDisplay.textContent = 'चुनी गई इमेज: ' + selectedSignatureFile.name;
+                signatureFileUploadLabel.style.display = 'none';
+                updateStatus();
+
+            } else {
+                 if(files.length > 0) { alert('कृपया केवल इमेज फ़ाइल चुनें।'); }
+                signatureFileInput.value = '';
+                signatureFileUploadLabel.style.display = 'block';
+                updateStatus();
+            }
+        }
+
+         function handleSignatureDrop(e) {
+             const dt = e.dataTransfer;
+             const files = dt.files;
+             handleSignatureFile(files);
+         }
+
+
+        // स्थिति संदेश अपडेट करें
+        function updateStatus() {
+            if (selectedPdfFile && selectedSignatureFile) {
+                statusMessage.textContent = 'PDF और सिग्नेचर इमेज दोनों चुने गए हैं। हस्ताक्षर जोड़ने के लिए तैयार!';
+            } else if (selectedPdfFile) {
+                statusMessage.textContent = 'सिग्नेचर इमेज चुनें।';
+            } else if (selectedSignatureFile) {
+                statusMessage.textContent = 'PDF फ़ाइल चुनें।';
+            } else {
+                statusMessage.textContent = 'PDF और सिग्नेचर इमेज फ़ाइलें चुनें।';
+            }
+             // सुनिश्चित करें कि बटन तभी सक्षम हो जब दोनों फ़ाइलें चुनी गई हों
+             signButton.disabled = !(selectedPdfFile && selectedSignatureFile);
+        }
+
+
+        // Sign बटन पर क्लिक हैंडल करें
+        signButton.addEventListener('click', async function() {
+            if (!selectedPdfFile || !selectedSignatureFile) {
+                alert('कृपया PDF फ़ाइल और सिग्नेचर इमेज दोनों चुनें।');
+                return;
+            }
+
+            statusMessage.textContent = 'PDF पर हस्ताक्षर जोड़ रहा है...';
+            signButton.disabled = true; // बटन को डिसेबल करें
+            resultArea.style.display = 'none'; // परिणाम क्षेत्र छिपाएं
+
+            try {
+                // PDF फ़ाइल को ArrayBuffer के रूप में पढ़ें
+                const pdfArrayBuffer = await selectedPdfFile.arrayBuffer();
+
+                // ArrayBuffer से मूल PDF दस्तावेज़ लोड करें
+                const pdfDoc = await PDFDocument.load(pdfArrayBuffer);
+
+                // सिग्नेचर इमेज फ़ाइल को ArrayBuffer के रूप में पढ़ें
+                 const signatureArrayBuffer = await selectedSignatureFile.arrayBuffer();
+
+                let signatureImage;
+                const signatureType = selectedSignatureFile.type;
+
+                // इमेज के प्रकार के आधार पर एम्बेड करें
+                if (signatureType === 'image/jpeg') {
+                    signatureImage = await pdfDoc.embedJpg(signatureArrayBuffer);
+                } else if (signatureType === 'image/png') {
+                    signatureImage = await pdfDoc.embedPng(signatureArrayBuffer);
+                }
+                // आप यहां अन्य इमेज प्रकारों के लिए समर्थन जोड़ सकते हैं यदि pdf-lib उनका समर्थन करता है
+
+                if (!signatureImage) {
+                     throw new Error('असमर्थित सिग्नेचर इमेज प्रारूप: ' + signatureType);
+                }
+
+
+                // अंतिम पृष्ठ प्राप्त करें
+                const pages = pdfDoc.getPages();
+                if (pages.length === 0) {
+                     throw new Error('PDF में कोई पृष्ठ नहीं है।');
+                }
+                const lastPage = pages[pages.length - 1]; // अंतिम पृष्ठ
+
+                const { width: pageWidth, height: pageHeight } = lastPage.getSize();
+                const signatureWidth = signatureImage.width;
+                const signatureHeight = signatureImage.height;
+
+                // सिग्नेचर को स्केल करें ताकि यह एक निश्चित अधिकतम चौड़ाई (जैसे 100 पॉइंट्स) से अधिक न हो
+                const maxSignatureWidth = 150; // अधिकतम वांछित चौड़ाई पॉइंट्स में
+                let scaledWidth = signatureWidth;
+                let scaledHeight = signatureHeight;
+
+                if (scaledWidth > maxSignatureWidth) {
+                    const scaleFactor = maxSignatureWidth / scaledWidth;
+                    scaledWidth *= scaleFactor;
+                    scaledHeight *= scaleFactor;
+                }
+
+                 // सुनिश्चित करें कि स्केल करने के बाद भी यह पृष्ठ पर फिट बैठता है (छोटे मार्जिन के साथ)
+                if (scaledHeight > pageHeight - 40 || scaledWidth > pageWidth - 40) { // मार्जिन थोड़ा बढ़ा दें
+                     const pageScaleFactor = Math.min((pageWidth - 40) / scaledWidth, (pageHeight - 40) / scaledHeight);
+                     scaledWidth *= pageScaleFactor;
+                     scaledHeight *= pageScaleFactor;
+                }
+
+
+                // सिग्नेचर को निचले-दाएं कोने में रखने के लिए स्थिति की गणना करें (20 पॉइंट्स मार्जिन)
+                const margin = 20; // पॉइंट्स में मार्जिन
+                const x = pageWidth - scaledWidth - margin;
+                const y = margin; // निचले मार्जिन से ऊपर
+
+
+                // अंतिम पृष्ठ पर सिग्नेचर इमेज ड्रा करें
+                lastPage.drawImage(signatureImage, {
+                    x: x,
+                    y: y,
+                    width: scaledWidth,
+                    height: scaledHeight,
+                });
+
+
+                // संशोधित PDF को बाइट्स के रूप में सहेजें
+                const pdfBytes = await pdfDoc.save();
+
+                // बाइट्स से एक Blob बनाएं
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+
+                // डाउनलोड लिंक बनाएं
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                // मूल नाम के साथ '_signed' जोड़ें
+                const originalName = selectedPdfFile.name.split('.').slice(0, -1).join('.');
+                a.download = `${originalName}_signed.pdf`;
+                 a.textContent = 'हस्ताक्षरित PDF डाउनलोड करें';
+                 a.className = 'download-link'; // स्टाइलिंग के लिए क्लास
+
+                // परिणाम क्षेत्र में डाउनलोड लिंक दिखाएं
+                resultArea.innerHTML = ''; // पिछला कंटेंट साफ़ करें
+                resultArea.appendChild(a);
+                resultArea.style.display = 'flex'; // परिणाम क्षेत्र दिखाएं
+                resultArea.style.borderColor = '#2ecc71'; // हरे रंग का बॉर्डर
+                resultArea.style.color = '#27ae60'; // हरे रंग का टेक्स्ट
+
+                statusMessage.textContent = 'PDF सफलतापूर्वक हस्ताक्षरित!';
+
+                 // फ़ाइल चयन रीसेट करें (वैकल्पिक)
+                 selectedPdfFile = null;
+                 selectedSignatureFile = null;
+                 pdfFileInput.value = '';
+                 signatureFileInput.value = '';
+                 pdfFileNameDisplay.textContent = '';
+                 signatureFileNameDisplay.textContent = '';
+                 pdfFileUploadLabel.style.display = 'block'; // लेबल दिखाएं
+                 signatureFileUploadLabel.style.display = 'block'; // लेबल दिखाएं
+                 updateStatus(); // स्थिति संदेश रीसेट करें
+
+
+            } catch (error) {
+                statusMessage.textContent = 'हस्ताक्षर जोड़ने में त्रुटि हुई।';
+                resultArea.innerHTML = `<p style="color: red;">त्रुटि: ${error.message}</p>`;
+                resultArea.style.display = 'flex'; // परिणाम क्षेत्र दिखाएं
+                 resultArea.style.borderColor = 'red'; // लाल बॉर्डर
+                 resultArea.style.color = 'red'; // लाल टेक्स्ट
+
+                console.error('PDF Sign त्रुटि:', error);
+
+            } finally {
+                signButton.disabled = false; // बटन को फिर से सक्षम करें
+            }
+        });
+
+        // शुरुआत में परिणाम क्षेत्र छिपाएं और बटन को डिसेबल करें
+        resultArea.style.display = 'none';
+        signButton.disabled = true;
+        updateStatus(); // प्रारंभिक स्थिति संदेश सेट करें
+
+
+    </script>
+
+</body>
+</html>
