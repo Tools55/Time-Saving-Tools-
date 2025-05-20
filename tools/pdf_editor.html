@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ऑनलाइन PDF उपकरण - Time Saving Tools</title>
+    <!-- हेड सेक्शन में स्टाइलिंग के लिए CSS -->
+    <style>
+        /* बेसिक स्टाइलिंग */
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 960px; /* कंटेंट की अधिकतम चौड़ाई */
+            margin: 20px auto; /* ऊपर नीचे 20px मार्जिन, दाएं बाएं ऑटो (बीच में लाने के लिए) */
+            padding: 0 20px; /* कंटेंट के चारों ओर पैडिंग */
+        }
+
+        /* हेडर की स्टाइलिंग */
+        header {
+            background-color: #fff;
+            padding: 20px 0;
+            text-align: center; /* हेडर टेक्स्ट को बीच में करें */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* हल्का शैडो */
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2.5em; /* हेडर टेक्स्ट का आकार */
+            margin: 0;
+            font-weight: bold;
+
+            /* रंगीन एनिमेटेड टेक्स्ट के लिए */
+            /* बैकग्राउंड में ग्रेडिएंट (इंद्रधनुषी रंगों जैसा) */
+            background: linear-gradient(270deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            background-size: 400% auto; /* ग्रेडिएंट को टेक्स्ट से ज़्यादा चौड़ा बनाएं ताकि एनीमेशन दिखे */
+            -webkit-background-clip: text; /* बैकग्राउंड को टेक्स्ट के आकार में क्लिप करें (पुराने ब्राउज़रों के लिए) */
+            background-clip: text; /* बैकग्राउंड को टेक्स्ट के आकार में क्लिप करें */
+            color: transparent; /* टेक्स्ट का रंग पारदर्शी करें ताकि बैकग्राउंड दिखे */
+            animation: gradientAnimation 10s linear infinite; /* एनीमेशन लागू करें */
+            display: inline-block; /* 'background-clip' के सही काम करने के लिए */
+        }
+
+        /* ग्रेडिएंट एनीमेशन की परिभाषा */
+        @keyframes gradientAnimation {
+            0% { background-position: 0% center; } /* एनीमेशन की शुरुआत */
+            100% { background-position: 400% center; } /* एनीमेशन का अंत (बैकग्राउंड को शिफ्ट करें) */
+        }
+
+        /* मुख्य कंटेंट क्षेत्र की स्टाइलिंग */
+        main {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* हल्का शैडो */
+            border-radius: 8px; /* किनारे हल्के गोल करें */
+        }
+
+        main h2 {
+            text-align: center;
+            color: #0056b3; /* हेडिंग का रंग */
+            margin-top: 0;
+        }
+
+        .tool-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd; /* सेक्शन के चारों ओर बॉर्डर */
+            border-radius: 5px;
+            background-color: #f9f9f9; /* हल्का बैकग्राउंड रंग */
+        }
+
+        .file-upload-area {
+            border: 2px dashed #ccc; /* डैशेड बॉर्डर */
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: #eee;
+            cursor: pointer; /* माउस पॉइंटर को हाथ वाला बनाएं */
+            transition: border-color 0.3s ease, background-color 0.3s ease; /* होवर पर बदलाव के लिए एनीमेशन */
+        }
+
+        .file-upload-area:hover {
+            border-color: #007bff; /* होवर पर बॉर्डर का रंग बदलें */
+            background-color: #e9e9e9; /* होवर पर बैकग्राउंड का रंग बदलें */
+        }
+
+         /* ड्रैग-एंड-ड्रॉप के दौरान हाईलाइट स्टाइल */
+        .file-upload-area.highlight {
+            border-color: #007bff;
+            background-color: #cce5ff; /* हल्का नीला बैकग्राउंड */
+        }
+
+
+        .file-upload-area input[type="file"] {
+            display: none; /* डिफ़ॉल्ट फ़ाइल इनपुट को छिपा दें */
+        }
+
+         .file-upload-area label {
+            display: block; /* लेबल को ब्लॉक तत्व बनाएं */
+            cursor: pointer; /* लेबल पर भी हाथ वाला पॉइंटर दिखे */
+         }
+
+
+        .tool-options {
+            display: grid; /* ग्रिड लेआउट */
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* प्रतिक्रियाशील ग्रिड कॉलम (न्यूनतम 150px, अधिकतम उपलब्ध स्थान) */
+            gap: 15px; /* ग्रिड आइटम्स के बीच की दूरी */
+            margin-top: 20px;
+        }
+
+        .tool-button {
+            display: block; /* बटन को पूरी चौड़ाई दें */
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff; /* बटन का बैकग्राउंड रंग */
+            color: white; /* बटन टेक्स्ट का रंग */
+            text-align: center;
+            text-decoration: none; /* यदि लिंक हैं तो अंडरलाइन हटा दें */
+            border: none; /* बॉर्डर हटा दें */
+            border-radius: 5px; /* किनारे गोल करें */
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* होवर पर बैकग्राउंड रंग बदलने के लिए एनीमेशन */
+            font-size: 1em;
+        }
+
+        .tool-button:hover {
+            background-color: #0056b3; /* होवर पर गहरा नीला रंग */
+        }
+
+        .placeholder-editor {
+            margin-top: 30px;
+            padding: 30px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-height: 200px; /* न्यूनतम ऊंचाई */
+            background-color: #fff;
+            text-align: center;
+            color: #666; /* टेक्स्ट का रंग */
+            font-style: italic; /* टेक्स्ट को इटैलिक करें */
+        }
+
+        /* फुटर की स्टाइलिंग */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 20px;
+            color: #777;
+            font-size: 0.9em; /* फ़ॉन्ट आकार */
+        }
+
+         /* छोटी स्क्रीन के लिए मीडिया क्वेरी (यदि आवश्यक हो) */
+         @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8em; /* छोटी स्क्रीन पर फ़ॉन्ट छोटा करें */
+            }
+            .tool-options {
+                grid-template-columns: 1fr; /* छोटी स्क्रीन पर सिंगल कॉलम ग्रिड */
+            }
+         }
+
+    </style>
+</head>
+<body>
+
+    <!-- हेडर सेक्शन -->
+    <header>
+        <!-- वेबसाइट का नाम - रंगीन और एनिमेटेड -->
+        <h1>Time Saving Tools</h1>
+    </header>
+
+    <!-- मुख्य कंटेंट के लिए कंटेनर -->
+    <div class="container">
+        <main>
+            <!-- पेज का मुख्य शीर्षक -->
+            <h2>ऑनलाइन PDF उपकरण</h2>
+
+            <p>यह पेज आपकी PDF फ़ाइलों को संपादित करने के लिए उपलब्ध उपकरणों का इंटरफ़ेस दिखाता है।</p>
+
+            <!-- फ़ाइल अपलोड सेक्शन -->
+            <div class="tool-section">
+                <h3>PDF फ़ाइल अपलोड करें</h3>
+                <p>शुरू करने के लिए, अपनी PDF फ़ाइल चुनें या उसे नीचे दिए गए क्षेत्र में ड्रैग और ड्रॉप करें।</p>
+
+                <div class="file-upload-area" id="drop-area">
+                    <!-- हिडन फ़ाइल इनपुट। लेबल पर क्लिक करने से यह सक्रिय होगा। -->
+                    <input type="file" accept=".pdf" id="pdfFile" />
+                    <!-- लेबल जो क्लिक करने योग्य क्षेत्र के रूप में काम करेगा -->
+                    <label for="pdfFile">अपनी PDF फ़ाइल चुनें या यहां ड्रैग और ड्रॉप करें</label>
+                    <!-- चुनी गई फ़ाइल का नाम दिखाने के लिए -->
+                    <p id="file-name"></p>
+                </div>
+                <p><small><strong>कृपया ध्यान दें:</strong> यह केवल इंटरफ़ेस है। फ़ाइल अपलोड और प्रोसेसिंग के लिए बैकएंड (सर्वर-साइड कोड) या एडवांस्ड JavaScript कोड की आवश्यकता होगी जो इस उदाहरण में शामिल नहीं है।</small></p>
+            </div>
+
+            <!-- उपकरण विकल्प सेक्शन -->
+            <div class="tool-section">
+                <h3>उपकरण चुनें</h3>
+                <p>अपनी फ़ाइल अपलोड करने के बाद, वह ऑपरेशन चुनें जो आप करना चाहते हैं:</p>
+
+                <!-- टूल बटनों के लिए ग्रिड लेआउट -->
+                <div class="tool-options">
+                    <!-- प्रत्येक बटन एक टूल का प्रतिनिधित्व करता है -->
+                    <!-- onclick इवेंट केवल एक डेमो अलर्ट दिखाता है -->
+                    <button class="tool-button" onclick="alert('यह केवल एक डेमो है। वास्तविक PDF मर्ज कार्यक्षमता कोडिंग की आवश्यकता है।')">PDF Merge करें</button>
+                    <button class="tool-button" onclick="alert('यह केवल एक डेमो है। वास्तविक PDF स्प्लिट कार्यक्षमता कोडिंग की आवश्यकता है।')">PDF Split करें</button>
+                    <button class="tool-button" onclick="alert('यह केवल एक डेमो है। वास्तविक PDF Compress कार्यक्षमता कोडिंग की आवश्यकता है।')">PDF Compress करें</button>
+                    <button class="tool-button" onclick="alert('यह केवल एक डेमो है। वास्तविक PDF टेक्स्ट एडिट कार्यक्षमता कोडिंग की आवश्यकता है।')">PDF टेक्स्ट एडिट करें</button>
+                    <button class="tool-button" onclick="alert('यह केवल एक डेमो है। वास्तविक PDF इमेज जोड़ें कार्यक्षमता कोडिंग की आवश्यकता है।')">PDF इमेज जोड़ें</button>
+                    <button class="tool-button" onclick="alert('यह केवल एक डेमो है। वास्तविक PDF Sign कार्यक्षमता कोडिंग की आवश्यकता है।')">PDF Sign करें</button>
+                    <!-- आप यहां और भी टूल बटन जोड़ सकते हैं -->
+                </div>
+                 <p><small>इन बटनों पर क्लिक करने से अभी कोई कार्य नहीं होगा। वास्तविक कार्यक्षमता के लिए आपको सर्वर-साइड कोड (जैसे Python, Node.js) या एडवांस्ड क्लाइंट-साइड लाइब्रेरीज़ (जैसे PDF.js + एक एडिटिंग लेयर, या व्यावसायिक API) का उपयोग करना होगा।</small></p>
+            </div>
+
+            <!-- PDF प्रीव्यू/एडिटर क्षेत्र के लिए प्लेसहोल्डर -->
+             <div class="tool-section">
+                 <h3>PDF प्रीव्यू/एडिटर क्षेत्र</h3>
+                 <div class="placeholder-editor">
+                     <p>यहां अपलोड की गई PDF का प्रीव्यू दिखेगा या संपादन इंटरफ़ेस लोड होगा।</p>
+                     <p>(यह क्षेत्र वास्तविक एडिटर को दिखाने के लिए एक प्लेसहोल्डर है)</p>
+                 </div>
+                 <p><small>वास्तविक PDF दिखाने या संपादित करने के लिए PDF.js जैसे JavaScript लाइब्रेरी या अन्य सेवाओं का उपयोग करने की आवश्यकता होगी।</small></p>
+             </div>
+
+        </main>
+    </div>
+
+    <!-- फुटर सेक्शन -->
+    <footer>
+        <p>© 2023 Time Saving Tools. All rights reserved.</p>
+    </footer>
+
+    <!-- फ़ाइल इनपुट और ड्रैग-एंड-ड्रॉप हैंडलिंग के लिए JavaScript (बेसिक) -->
+    <script>
+        // फ़ाइल इनपुट सेलेक्ट करने पर फ़ाइल का नाम दिखाएं
+        const fileInput = document.getElementById('pdfFile');
+        const fileNameDisplay = document.getElementById('file-name');
+        const fileUploadLabel = document.querySelector('.file-upload-area label'); // लेबल तत्व
+
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = 'चुनी गई फ़ाइल: ' + fileInput.files[0].name;
+                fileUploadLabel.style.display = 'none'; // फ़ाइल चुनने के बाद "फाइल चुनें..." लेबल छिपा दें
+            } else {
+                fileNameDisplay.textContent = '';
+                fileUploadLabel.style.display = 'block'; // यदि कोई फ़ाइल नहीं चुनी गई तो लेबल दिखाएं
+            }
+        });
+
+        // ड्रैग और ड्रॉप कार्यक्षमता (बेसिक)
+        const dropArea = document.getElementById('drop-area');
+
+        // डिफ़ॉल्ट व्यवहार रोकें (फ़ाइल ब्राउज़र में नहीं खुलनी चाहिए)
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // ड्रैग करते समय हाईलाइट करें
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
+        });
+
+        // ड्रैग खत्म होने या ड्रॉप होने पर हाईलाइट हटा दें
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+        });
+
+        // फ़ाइल ड्रॉप होने पर हैंडल करें
+        dropArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+
+            // सरलता के लिए मान लें कि केवल एक फ़ाइल ड्रॉप की गई है
+            if (files.length > 0) {
+                const pdfFile = files[0];
+                if (pdfFile.type === 'application/pdf') {
+                     fileInput.files = files; // ड्रॉप की गई फ़ाइल को इनपुट में असाइन करें
+                     fileNameDisplay.textContent = 'चुनी गई फ़ाइल: ' + pdfFile.name;
+                     fileUploadLabel.style.display = 'none'; // लेबल छिपा दें
+                     // यहां आप आमतौर पर फ़ाइल को प्रोसेस करेंगे (जैसे पढ़ना, सर्वर पर भेजना)
+                     console.log('PDF फ़ाइल ड्रॉप की गई:', pdfFile.name);
+                     // उपयोगकर्ता को सूचित करने के लिए अलर्ट
+                     alert('PDF फ़ाइल ड्रॉप की गई! लेकिन वास्तविक प्रोसेसिंग के लिए कोडिंग की आवश्यकता है। कंसोल देखें।');
+                } else {
+                    alert('केवल PDF फ़ाइलें स्वीकार की जाती हैं।');
+                     fileNameDisplay.textContent = '';
+                     fileUploadLabel.style.display = 'block';
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
