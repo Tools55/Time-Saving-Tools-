@@ -1,307 +1,96 @@
-<!DOCTYPE html>
-<html lang="hi">
+
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PAN Card Image Resizer</title>
-  <style>
-    /* Global Styles */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to bottom, #cccccc, #f9e79f);
-      color: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      max-width: 500px;
-      width: 90%;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 20px;
-      margin-bottom: 20px;
-    }
-
-    input[type="file"],
-    input[type="range"] {
-      margin: 10px auto;
-      display: block;
-    }
-
-    label {
-      font-size: 16px;
-    }
-
-    img {
-      max-width: 100%;
-      margin-top: 20px;
-      border: 2px solid #ccc;
-      border-radius: 5px;
-    }
-
-    a {
-      display: inline-block;
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: #007BFF;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: bold;
-    }
-
-    a:hover {
-      background: #0056b3;
-    }
-
-    .spinner {
-      width: 40px;
-      height: 40px;
-      margin: 20px auto;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #007BFF;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .size-info {
-      margin-top: 10px;
-      font-size: 14px;
-    }
-
-    canvas {
-      display: none;
-    }
-
-    /* Crop Window Styles */
-    .crop-container {
-      background: #f9f9f9;
-      text-align: center;
-      padding: 20px;
-    }
-
-    .crop-container img {
-      max-width: 100%;
-      display: block;
-      margin: 0 auto;
-    }
-
-    .crop-container p {
-      margin-top: 10px;
-      font-size: 14px;
-    }
-
-    .crop-box {
-      position: absolute;
-      border: 2px dashed red;
-      z-index: 1000;
-    }
-  </style>
-</head>
-<body>
-
-<div class="container">
-
-  <h1>Indian PAN Card के लिए Image Resize करें</h1>
-
-  <input type="file" id="upload" accept="image/*" />
-  <br />
-
-  <label for="quality">Compression Level: <span id="qValue">70%</span></label>
-  <input type="range" id="quality" min="10" max="100" value="70" step="5" />
-
-  <canvas id="canvas"></canvas>
-  <div class="spinner hidden" id="spinner"></div>
-
-  <img id="preview" src="" alt="Preview" class="hidden" />
-
-  <div class="size-info" id="sizeInfo"></div>
-
-  <a id="download" class="hidden" download="pan_image.jpg">डाउनलोड Resized Image</a>
-
-</div>
-
-<script>
-  const upload = document.getElementById('upload');
-  const canvas = document.getElementById('canvas');
-  const preview = document.getElementById('preview');
-  const spinner = document.getElementById('spinner');
-  const sizeInfo = document.getElementById('sizeInfo');
-  const downloadLink = document.getElementById('download');
-  const qualitySlider = document.getElementById('quality');
-  const qValue = document.getElementById('qValue');
-
-  let originalSizeKB = 0;
-
-  // Update compression level label
-  qualitySlider.addEventListener('input', () => {
-    qValue.textContent = qualitySlider.value + '%';
-  });
-
-  upload.addEventListener('change', function () {
-    const file = this.files[0];
-    if (!file) return;
-
-    // Show loading
-    spinner.classList.remove('hidden');
-    preview.classList.add('hidden');
-    downloadLink.classList.add('hidden');
-    sizeInfo.textContent = "";
-
-    // Read original size
-    originalSizeKB = file.size / 1024;
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const img = new Image();
-      img.onload = function () {
-        // Open cropping dialog
-        const cropWindow = window.open('', '_blank', 'width=600,height=500');
-        cropWindow.document.write(`
-          <html>
-            <head><title>Crop Image</title></head>
-            <body style="margin:0;padding:0;">
-              <div class="crop-container">
-                <img id="cropImg" src="${e.target.result}" style="max-width:100%;display:block;margin:auto;" />
-                <p style="text-align:center;">Drag and select the area you want to keep.</p>
-              </div>
-              <script>
-                const img = document.getElementById("cropImg");
-                let startX = 0, startY = 0, endX = 0, endY = 0, isSelecting = false;
-                let rect = null;
-
-                img.addEventListener('mousedown', (e) => {
-                  isSelecting = true;
-                  const offset = img.getBoundingClientRect();
-                  startX = e.clientX - offset.left;
-                  startY = e.clientY - offset.top;
-                });
-
-                img.addEventListener('mousemove', (e) => {
-                  if (!isSelecting) return;
-                  const offset = img.getBoundingClientRect();
-                  endX = e.clientX - offset.left;
-                  endY = e.clientY - offset.top;
-
-                  if (!rect) {
-                    rect = document.createElement('div');
-                    rect.className = 'crop-box';
-                    img.parentNode.appendChild(rect);
-                  }
-
-                  const left = Math.min(startX, endX);
-                  const top = Math.min(startY, endY);
-                  const width = Math.abs(endX - startX);
-                  const height = Math.abs(endY - startY);
-
-                  rect.style.left = left + 'px';
-                  rect.style.top = top + 'px';
-                  rect.style.width = width + 'px';
-                  rect.style.height = height + 'px';
-                });
-
-                img.addEventListener('mouseup', () => {
-                  isSelecting = false;
-                  if (!rect) return;
-
-                  const croppedCanvas = document.createElement('canvas');
-                  const ctx = croppedCanvas.getContext('2d');
-                  const imgData = img.src;
-
-                  const cropImg = new Image();
-                  cropImg.onload = () => {
-                    const width = parseInt(rect.style.width);
-                    const height = parseInt(rect.style.height);
-                    croppedCanvas.width = width;
-                    croppedCanvas.height = height;
-
-                    ctx.drawImage(cropImg,
-                      parseInt(rect.style.left), parseInt(rect.style.top),
-                      width, height,
-                      0, 0, width, height);
-
-                    const croppedDataURL = croppedCanvas.toDataURL();
-
-                    // Close popup
-                    window.close();
-
-                    // Now resize and compress
-                    resizeAndCompress(croppedDataURL);
-                  };
-                  cropImg.src = imgData;
-                });
-              <\/script>
-            </body>
-          </html>
-        `);
-      };
-      img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-
-  function resizeAndCompress(dataURL) {
-    const img = new Image();
-    img.onload = function () {
-      const ctx = canvas.getContext('2d');
-      canvas.width = 213;
-      canvas.height = 213;
-
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      const scale = Math.min(213 / img.width, 213 / img.height);
-      const x = (213 - img.width * scale) / 2;
-      const y = (213 - img.height * scale) / 2;
-
-      ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-
-      const quality = parseInt(qualitySlider.value) / 100;
-
-      canvas.toBlob(function (blob) {
-        spinner.classList.add('hidden');
-
-        const finalSizeKB = blob.size / 1024;
-        sizeInfo.innerHTML = `
-          🔹 Original Size: ${originalSizeKB.toFixed(2)} KB<br/>
-          🔹 Final Size: ${finalSizeKB.toFixed(2)} KB
-        `;
-
-        if (blob.size > 30 * 1024) {
-          alert("⚠️ File size exceeds 30 KB. Try increasing compression.");
-          return;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAN Card Photo Resizer</title>
+    <style>
+        body {
+            background-color: #d3d3d3;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
         }
 
-        const resizedDataURL = URL.createObjectURL(blob);
-        preview.src = resizedDataURL;
-        preview.classList.remove('hidden');
-        downloadLink.href = resizedDataURL;
-        downloadLink.classList.remove('hidden');
-      }, 'image/jpeg', quality);
-    };
-    img.src = dataURL;
-  }
-</script>
+        .container {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            display: inline-block;
+        }
 
+        #preview-container {
+            margin: 20px 0;
+        }
+
+        canvas {
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: yellow;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PAN Card Photo Resizer</h1>
+        <input type="file" id="upload" accept="image/*">
+        <div id="preview-container">
+            <canvas id="canvas"></canvas>
+        </div>
+        <button id="auto-resize">Auto Resize</button>
+        <button id="crop">Crop</button>
+        <button id="download">Download</button>
+    </div>
+    <script>
+        const upload = document.getElementById('upload');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const autoResizeButton = document.getElementById('auto-resize');
+        const cropButton = document.getElementById('crop');
+        const downloadButton = document.getElementById('download');
+        
+        let image = new Image();
+        let scaleFactor = 1;
+        
+        upload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    image.src = e.target.result;
+                    image.onload = () => {
+                        scaleFactor = Math.min(213 / image.width, 213 / image.height);
+                        canvas.width = image.width * scaleFactor;
+                        canvas.height = image.height * scaleFactor;
+                        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        autoResizeButton.addEventListener('click', () => {
+            canvas.width = 213;
+            canvas.height = 213;
+            ctx.drawImage(image, 0, 0, 213, 213);
+        });
+        
+        cropButton.addEventListener('click', () => {
+            // Implement cropping functionality here
+        });
+        
+        downloadButton.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'resized-photo.jpg';
+            link.href = canvas.toDataURL('image/jpeg', 0.9);
+            link.click();
+        });
+    </script>
 </body>
 </html>
